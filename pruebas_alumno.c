@@ -1,6 +1,6 @@
 #include "pa2m.h"
 #include "src/tp1.h"
-
+//gcc -Wall -Wextra -std=c11 src/tp1.c pruebas_alumno.c -o test.exe
 #define ARCHIVO_PRUEBA_INEXISTENTE "ejemplos/asdkasjhfskladjhfksdfhksdf.csv"
 #define ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS "ejemplos/normal.csv"
 #define ARCHIVO_PRUEBA_VACIO "ejemplos/vacio.csv"
