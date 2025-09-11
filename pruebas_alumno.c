@@ -3,6 +3,7 @@
 //gcc -Wall -Wextra -std=c11 src/tp1.c pruebas_alumno.c -o test.exe
 #define ARCHIVO_PRUEBA_INEXISTENTE "ejemplos/asdkasjhfskladjhfksdfhksdf.csv"
 #define ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS "ejemplos/normal.csv"
+#define ARCHIVO_PRUEBA_EXISTENTE_10_LINEAS "ejemplos/normal2.csv"
 #define ARCHIVO_PRUEBA_VACIO "ejemplos/vacio.csv"
 #define ARCHIVO_PRUEBA_3_VALIDAS "ejemplos/lineas_inv.csv"
 #define ARCHIVO_PRUEBA_1_REPETIDO "ejemplos/largo.csv"
@@ -41,11 +42,11 @@ void tp1_cantidad_pokemon_repetido(){
 	pa2m_afirmar(tp1_cantidad(tp1) == 15, "tp1_cantidad devuelve la cantidad correcta con pokemones REPETIDOS");
 }
 // -------------------------------------------PRUEBAS DE UNION------------------------------------------------
-void tp1_cantidad_pokemon_repetido(){
+void tp1_cantidad_pokemon_union(){
 	tp1_t *tp1 = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
-	tp1_t *tp2 = tp1_leer_archivo(ARCHIVO_PRUEBA_3_VALIDAS);
-
-	
+	tp1_t *tp2 = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_10_LINEAS);
+	tp1_t *merge = tp1_union(tp1,tp2);
+	pa2m_afirmar(tp1_cantidad(merge) == 10, "La funcion tp1_union guarda la cantidad correcta de pokemones");
 }
 
 // -------------------------------------------PRUEBAS DE X------------------------------------------------
@@ -63,7 +64,7 @@ int main()
 	tp1_cantidad_lineas_sin_lineas();
 	tp1_cantidad_pokemon_repetido();
 	pa2m_nuevo_grupo("Pruebas de tp1_union");
-
-
+	tp1_cantidad_pokemon_union();
+	
 	return pa2m_mostrar_reporte();
 }
