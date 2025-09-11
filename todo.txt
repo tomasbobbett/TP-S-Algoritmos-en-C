@@ -1,6 +1,23 @@
 IDEA GENERAL:
 Primero implementar el tp1.h y usar este como libreria para hacer el main.c
 
-1. Implementar tp1.h
-2. Empezar con las pruebas
+1. Implementar tp1.h 
+    cambiar leer archivo ORDENADO
+    union
+    interseccion
+    diferencia
+    buscar nombre
+    bucar id 
+    con cada pokemon
+    destruir
+2. Terminar pruebas
+    guardar archivo
+    union
+    interseccion
+    diferencia
+    buscar nombre
+    bucar id 
+    con cada pokemon
+    destruir
 3. Implementar el main.c y entregar
+----------------------------------

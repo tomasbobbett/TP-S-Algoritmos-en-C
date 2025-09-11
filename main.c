@@ -12,5 +12,6 @@ int main(int argc, char *argv[]){
 	//leer un archivo según el parámetro y hacer lo que corresponda según el enunciado
 	tp1_t *tp = tp1_leer_archivo(argv[1]);
 	printf("%lld",tp1_cantidad(tp));
+	tp1_guardar_archivo(tp, "nuevooo");
 	return 0;
 }
