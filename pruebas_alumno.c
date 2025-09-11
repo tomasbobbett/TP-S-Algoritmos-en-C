@@ -40,7 +40,13 @@ void tp1_cantidad_pokemon_repetido(){
 	tp1_t *tp1 = tp1_leer_archivo(ARCHIVO_PRUEBA_1_REPETIDO);
 	pa2m_afirmar(tp1_cantidad(tp1) == 15, "tp1_cantidad devuelve la cantidad correcta con pokemones REPETIDOS");
 }
-// -------------------------------------------PRUEBAS DE X------------------------------------------------
+// -------------------------------------------PRUEBAS DE UNION------------------------------------------------
+void tp1_cantidad_pokemon_repetido(){
+	tp1_t *tp1 = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
+	tp1_t *tp2 = tp1_leer_archivo(ARCHIVO_PRUEBA_3_VALIDAS);
+
+	
+}
 
 // -------------------------------------------PRUEBAS DE X------------------------------------------------
 
@@ -56,5 +62,8 @@ int main()
 	tp1_cantidad_lineas_invalidas();
 	tp1_cantidad_lineas_sin_lineas();
 	tp1_cantidad_pokemon_repetido();
+	pa2m_nuevo_grupo("Pruebas de tp1_union");
+
+
 	return pa2m_mostrar_reporte();
 }

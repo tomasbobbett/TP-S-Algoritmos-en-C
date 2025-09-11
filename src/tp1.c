@@ -53,8 +53,8 @@ static enum tipo_pokemon parsear_string_tipo(const char *tipo_str) {
     }
     return -1; // inválido
 }
-
-static bool existe_pokemon(struct tp1 *tp, int id){ // funcion estatica para saber si el tp procesado ya habia sido procesado
+ // funcion estatica para saber si el pokemon procesado ya habia sido procesado
+static bool existe_pokemon(struct tp1 *tp, int id){
     for (size_t i = 0; i < tp->cantidad; i++){//       La hacemos statica porque no tendira sentido usarla en el exterior de el scope general
         if (tp->pokemones[i].id == id){
             return true;
@@ -62,6 +62,7 @@ static bool existe_pokemon(struct tp1 *tp, int id){ // funcion estatica para sab
     }
     return false;
 }
+// Funcion para redimensinoar el tamaño de memoria almacenado para tp->pokemones
 static bool tp1_redimensionar(tp1_t *tp) {
     if (!tp) return false;
 
@@ -78,6 +79,22 @@ static bool tp1_redimensionar(tp1_t *tp) {
     return true;
 }
 //Implementaciones de las funciones declaradas en tp1.h por la catedra---------------
+static bool insertar_ordeando(struct tp1 *tp, struct pokemon p){
+    if (tp->capacidad == tp->cantidad){
+        bool redim = tp1_redimensionar(tp);
+        if (!redim){                                //Antes de agregr el pokemon chequeamos si hay que redimensionar
+            return false;
+        }
+    }
+    size_t i = tp->cantidad;
+    while(i > 0 && tp->pokemones[i-1].id > p.id){
+        tp->pokemones[i] = tp->pokemones[i-1];
+        i--;
+    }
+    tp->pokemones[i] = p;
+    tp->cantidad++;
+    return true;
+}
 
 tp1_t *tp1_leer_archivo(const char *nombre){
     FILE *file = fopen(nombre, READ_MODE);
@@ -99,7 +116,7 @@ tp1_t *tp1_leer_archivo(const char *nombre){
         fclose(file);
         return NULL; //error al reservar memoria de pokemones
     }
-    
+
     //Llenamos pokemones mientras leemos las lineas del archivo pasado por paramero
     char linea[500];
     while(fgets(linea,sizeof(linea),file)){
@@ -116,28 +133,20 @@ tp1_t *tp1_leer_archivo(const char *nombre){
         //verificar si ya existe el pokemon en tp por la id
         if (existe_pokemon(tp,id)){
             continue;
-        }
-        //verificar si modifico la capacidad de tp REDIM usando la capacidad del struct tp1_t
-        if (tp->capacidad == tp->cantidad){
-            bool redim = tp1_redimensionar(tp);
-            if (!redim){
-                free(tp);
-                fclose(file);
-                return NULL;
-            }
-        }
-        
+        }        
         //Añadir pokemon leido a &tp->pokemones[tp->cantidad]; y luego aumentar cantidad para no reemplazar el anterior
-        struct pokemon *p = &tp->pokemones[tp->cantidad];
-        p->id = id;
-        p->nombre = strdup(nombre_poke);
-        p->tipo = parsear_string_tipo(tipo_str);
-        p->ataque=ataque;
-        p->defensa = defensa;
-        p->velocidad = velocidad;
-
-        tp->cantidad++;
-
+        struct pokemon p;
+        p.id = id;
+        p.nombre = strdup(nombre_poke);
+        p.tipo = parsear_string_tipo(tipo_str);
+        p.ataque=ataque;
+        p.defensa = defensa;
+        p.velocidad = velocidad;
+        if (!insertar_ordeando(tp,p)){
+            fclose(file);
+            // EXPLOTAR MEMORIA
+            return  NULL;
+        }
 
     }
     fclose(file);
@@ -161,24 +170,47 @@ tp1_t *tp1_guardar_archivo(tp1_t *tp1, const char *nombre){
     return tp1;
 }
 
-tp1_t *tp1_union(tp1_t *un_tp, tp1_t otro_tp){
+tp1_t *tp1_union(tp1_t *un_tp, tp1_t *otro_tp){
     tp1_t *res = malloc(sizeof(tp1_t));// Reservamos memoria para el struct de tp1 
     if (!res){
         return NULL;
     }
     res->cantidad = 0;
-    res->capacidad = un_tp->cantidad + otro_tp.cantidad; 
+    res->capacidad = un_tp->cantidad + otro_tp->cantidad; 
     res->pokemones = malloc(res->capacidad * sizeof(struct pokemon));
-    if(!res->pokemones){
-        free(res);
-        return NULL;
+    size_t i = 0;
+    size_t j = 0;
+    size_t k = 0;
+    while( i<un_tp->cantidad && j < otro_tp->cantidad){
+        if (un_tp->pokemones[i].id < otro_tp->pokemones[j].id){
+            res->pokemones[k] = un_tp->pokemones[i];
+            res->pokemones[k].nombre = strdup(un_tp->pokemones[i].nombre);
+            i++;
+        }
+        else if (un_tp->pokemones[i].id > otro_tp->pokemones[j].id){
+            res->pokemones[k] = otro_tp->pokemones[j];
+            res->pokemones[k].nombre = strdup(otro_tp->pokemones[j].nombre);
+            j++;
+        }else{
+            res->pokemones[k] = un_tp->pokemones[i];
+            res->pokemones[k].nombre = strdup(un_tp->pokemones[i].nombre);
+            i++;
+            j++;
+        }
+        k++;
     }
-    
-    for (size_t i = 0; i < un_tp->cantidad;i++){
-        res->pokemones[res->cantidad] = un_tp->pokemones[i];
-        res->cantidad++;
+    while(i < un_tp->cantidad){
+         res->pokemones[k] = un_tp->pokemones[i];
+        res->pokemones[k].nombre = strdup(un_tp->pokemones[i].nombre);
+        i++;
+        k++;
     }
-    
-
+    while(j < otro_tp->cantidad){
+        res->pokemones[k] = otro_tp->pokemones[j];
+        res->pokemones[k].nombre = strdup(otro_tp->pokemones[j].nombre);
+        j++;
+        k++;
+    }
+    res->cantidad = k;
     return res;
 }   
