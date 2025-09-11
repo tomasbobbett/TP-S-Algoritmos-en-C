@@ -3,7 +3,7 @@ Primero implementar el tp1.h y usar este como libreria para hacer el main.c
 
 1. Implementar tp1.h 
 X    cambiar leer archivo ORDENADO 
-    union
+X    union
     interseccion
     diferencia
     buscar nombre
