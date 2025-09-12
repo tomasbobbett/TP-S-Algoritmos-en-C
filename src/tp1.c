@@ -159,7 +159,7 @@ size_t tp1_cantidad(tp1_t *tp1){
 
 tp1_t *tp1_guardar_archivo(tp1_t *tp1, const char *nombre){
     FILE *file = fopen(nombre, WRITE_MODE);
-    if(!file){
+    if(!file || !tp1){
         return NULL;
     }
     for (size_t i = 0; i < tp1->cantidad; i++){
@@ -171,6 +171,27 @@ tp1_t *tp1_guardar_archivo(tp1_t *tp1, const char *nombre){
 }
 
 tp1_t *tp1_union(tp1_t *un_tp, tp1_t *otro_tp){
+    if (un_tp == NULL && otro_tp == NULL){
+        return NULL;
+    }
+     const char *tmp_file = "tmp_union.csv";
+
+    // Si un_tp es NULL → usamos solo otro_tp
+    if (!un_tp) {
+        if (!tp1_guardar_archivo(otro_tp, tmp_file)) return NULL;
+        tp1_t *res = tp1_leer_archivo(tmp_file);
+        remove(tmp_file); // borramos el temporal
+        return res;
+    }
+
+    // Si otro_tp es NULL → usamos solo un_tp
+    if (!otro_tp) {
+        if (!tp1_guardar_archivo(un_tp, tmp_file)) return NULL;
+        tp1_t *res = tp1_leer_archivo(tmp_file);
+        remove(tmp_file); // borramos el temporal
+        return res;
+    }
+    
     tp1_t *res = malloc(sizeof(tp1_t));// Reservamos memoria para el struct de tp1 
     if (!res){
         return NULL;
@@ -181,7 +202,7 @@ tp1_t *tp1_union(tp1_t *un_tp, tp1_t *otro_tp){
     size_t i = 0;
     size_t j = 0;
     size_t k = 0;
-    while( i<un_tp->cantidad && j < otro_tp->cantidad){
+    while(i<un_tp->cantidad && j < otro_tp->cantidad){
         if (un_tp->pokemones[i].id < otro_tp->pokemones[j].id){
             res->pokemones[k] = un_tp->pokemones[i];
             res->pokemones[k].nombre = strdup(un_tp->pokemones[i].nombre);
