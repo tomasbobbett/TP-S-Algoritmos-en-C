@@ -73,6 +73,32 @@ void tp1_union_tp1_t_invalido(){
 	pa2m_afirmar( tp1_cantidad(merge) == tp1_cantidad(tp1), "La funcion tp1_union devuelve una copia del primer tp si el segundo es NULL");
 
 }
+// -------------------------------------------PRUEBAS DE INTERSECCION------------------------------------------------
+void tp1_interseccion_tp1_t_valido(){
+	tp1_t *tp1 = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
+	tp1_t *tp2 = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_10_LINEAS);
+	tp1_t *tp_vacio = tp1_leer_archivo(ARCHIVO_PRUEBA_VACIO);
+
+	tp1_t *interseccion = tp1_interseccion(tp1,tp2);
+	tp1_t *interseccion_con_vacio = tp1_interseccion(tp1,tp_vacio);
+	tp1_t *interseccion_dos_vacios = tp1_interseccion(tp_vacio,tp_vacio);
+
+	pa2m_afirmar(tp1_cantidad(interseccion) == 5, "Interseccion devuelve solo los pokemones presentes en ambos structs");
+	pa2m_afirmar(tp1_cantidad(interseccion_con_vacio) == 0, "Interseccion con un struct vacio devuelve otro struct vacio");
+	pa2m_afirmar(tp1_cantidad(interseccion_dos_vacios) == 0, "Interseccion de dos structs vacios devuelve otro struct vacio");
+}
+
+void tp1_interseccion_tp1_t_invalido(){
+	tp1_t *tp1 = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
+
+	tp1_t *interseccion_null_1 = tp1_interseccion(NULL, tp1);
+	tp1_t *interseccion_null_2 = tp1_interseccion(tp1, NULL);
+	tp1_t *interseccion_null_ambos = tp1_interseccion(NULL, NULL);
+
+	pa2m_afirmar(tp1_cantidad(interseccion_null_1) == 0, "Interseccion con primer TP1 NULL devuelve struct vacio");
+	pa2m_afirmar(tp1_cantidad(interseccion_null_2) == 0, "Interseccion con segundo TP1 NULL devuelve struct vacio");
+	pa2m_afirmar(tp1_cantidad(interseccion_null_ambos) == 0, "Interseccion con ambos TP1 NULL devuelve struct vacio");
+}
 
 
 int main()
@@ -94,5 +120,13 @@ int main()
 	pa2m_nuevo_grupo("Pruebas de tp1_union");
 	tp1_union_tp1_t_valido();
 	tp1_union_tp1_t_invalido();
+
+	pa2m_nuevo_grupo("Pruebas de tp1_interseccion");
+	tp1_interseccion_tp1_t_valido();
+	tp1_interseccion_tp1_t_invalido();
+
+
 	return pa2m_mostrar_reporte();
+
+	
 }

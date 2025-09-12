@@ -59,7 +59,7 @@ tp1_t *tp1_union(tp1_t *un_tp, tp1_t *otro_tp);
  * 
  * En caso de error devuelve NULL.
 */
-tp1_t *tp1_interseccion(tp1_t *un_tp, tp1_t otro_tp);
+tp1_t *tp1_interseccion(tp1_t *un_tp, tp1_t *otro_tp);
 
 /**
 * Dados 2 tp1, devuelve un nuevo tp1 que es la diferencia de ambos.

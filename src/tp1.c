@@ -191,7 +191,7 @@ tp1_t *tp1_union(tp1_t *un_tp, tp1_t *otro_tp){
         remove(tmp_file); // borramos el temporal
         return res;
     }
-    
+
     tp1_t *res = malloc(sizeof(tp1_t));// Reservamos memoria para el struct de tp1 
     if (!res){
         return NULL;
@@ -235,3 +235,46 @@ tp1_t *tp1_union(tp1_t *un_tp, tp1_t *otro_tp){
     res->cantidad = k;
     return res;
 }   
+
+
+tp1_t *tp1_interseccion(tp1_t *un_tp, tp1_t *otro_tp){
+    if (!un_tp || !otro_tp) {
+        // Intersección con NULL → vacía
+        tp1_t *res = malloc(sizeof(tp1_t));
+        if (!res) return NULL;
+        res->cantidad = 0;
+        res->capacidad = 0;
+        res->pokemones = NULL;
+        return res;
+    }
+
+    tp1_t *res = malloc(sizeof(tp1_t));// Reservamos memoria para el struct resultante de la inters
+    if (!res){
+        return NULL;
+    }
+    res->cantidad = 0;
+    if (un_tp->cantidad < otro_tp->cantidad){
+        res->capacidad = un_tp->cantidad;
+    }else{
+        res->capacidad = otro_tp->cantidad;
+    }
+    res->pokemones = malloc(res->capacidad * sizeof(struct pokemon));
+    size_t i = 0;
+    size_t j = 0;
+    size_t k = 0;
+    while(i<un_tp->cantidad && j < otro_tp->cantidad){
+        if (un_tp->pokemones[i].id == otro_tp->pokemones[j].id){
+            res->pokemones[k] = un_tp->pokemones[i];
+            res->pokemones[k].nombre = strdup(un_tp->pokemones[i].nombre);
+            i++;
+            j++;
+            k++;
+        }else if (un_tp->pokemones[i].id < otro_tp->pokemones[j].id){
+            i++;
+        }else{
+            j++;
+        }
+    }
+    res->cantidad = k;
+    return res;
+}
