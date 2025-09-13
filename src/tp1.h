@@ -68,7 +68,7 @@ tp1_t *tp1_interseccion(tp1_t *un_tp, tp1_t *otro_tp);
 *
 * En caso de error devuelve NULL.
 */
-tp1_t *tp1_diferencia(tp1_t *un_tp, tp1_t otro_tp);
+tp1_t *tp1_diferencia(tp1_t *un_tp, tp1_t *otro_tp);
 
 /**
 * Busca un pokemon por nombre.

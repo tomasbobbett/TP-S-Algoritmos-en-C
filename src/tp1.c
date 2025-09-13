@@ -8,6 +8,7 @@
 
 // Definición de la estructura oculta
 struct tp1 {
+    struct pokemon *pokemones_nombres;
     struct pokemon *pokemones;      // arreglo dinámico de punteros a pokemon (puntero a un arreglo de punteros)
     size_t cantidad, capacidad;     // cantidad de pokemones almacenados y capacidad del arreglo
 };
@@ -25,6 +26,38 @@ static const char* tipo_a_string(enum tipo_pokemon tipo) {
         case TIPO_LUCH: return "LUCH";
         default: return "DESCONOCIDO";
     }
+}
+static struct pokemon *busqueda_binaria_pokemon(tp1_t *tp, const char *nombre,int inicio, int final){
+    if (inicio >= final){
+        if (strcmp(tp->pokemones_nombres[inicio].nombre, nombre) == 0){
+            return &tp->pokemones_nombres[inicio];
+        }
+        return NULL;
+    }
+    int mid = ((inicio + final) / 2);
+    if (strcmp(tp->pokemones_nombres[mid].nombre, nombre) == 0){
+        return &tp->pokemones_nombres[mid];
+    }else if (strcmp(tp->pokemones_nombres[mid].nombre, nombre) < 0){
+        return busqueda_binaria_pokemon(tp,nombre,mid+1,final);
+    }
+    return busqueda_binaria_pokemon(tp,nombre,inicio,mid);
+}
+
+static struct pokemon *busqueda_binaria_id(tp1_t *tp, int id,int inicio, int final){
+    if (inicio >= final){
+        if (tp->pokemones[inicio].id == id){
+            return &tp->pokemones[inicio];
+        }
+        return NULL;
+    }
+    int mid = ((inicio + final) / 2);
+    if (tp->pokemones[mid].id == id){
+        return &tp->pokemones[mid];
+    }else if ((tp->pokemones[mid].id< id)){
+        return busqueda_binaria_pokemon(tp,id,mid+1,final);
+    }
+    return busqueda_binaria_pokemon(tp,id,inicio,mid);
+
 }
 static enum tipo_pokemon parsear_string_tipo(const char *tipo_str) {
     if (strcmp(tipo_str, "ELEC") == 0){
@@ -72,9 +105,12 @@ static bool tp1_redimensionar(tp1_t *tp) {
     }
 
     struct pokemon *nuevo_array = realloc(tp->pokemones, nueva_capacidad * sizeof(struct pokemon));
+    struct pokemon *nuevo_array_nombre = realloc(tp->pokemones_nombres, nueva_capacidad * sizeof(struct pokemon));
     if (!nuevo_array) return false;
+    if (!nuevo_array_nombre) return false;
 
     tp->pokemones = nuevo_array;
+    tp->pokemones_nombres = nuevo_array_nombre;
     tp->capacidad = nueva_capacidad;
     return true;
 }
@@ -92,6 +128,15 @@ static bool insertar_ordeando(struct tp1 *tp, struct pokemon p){
         i--;
     }
     tp->pokemones[i] = p;
+    return true;
+}
+static bool insertar_nombre_ordenado(struct tp1 *tp, struct pokemon p){
+    size_t i = tp->cantidad;
+    while(i > 0 && strcmp(tp->pokemones_nombres[i-1].nombre, p.nombre)>0){
+        tp->pokemones_nombres[i] = tp->pokemones_nombres[i-1];
+        i--;
+    }
+    tp->pokemones_nombres[i] = p;
     tp->cantidad++;
     return true;
 }
@@ -111,6 +156,7 @@ tp1_t *tp1_leer_archivo(const char *nombre){
     tp->cantidad = 0;
     tp->capacidad = CAPACIDAD_INICIAL_TP1;
     tp->pokemones = malloc(tp->capacidad * sizeof(struct pokemon));
+    tp->pokemones_nombres = malloc(tp->capacidad * sizeof(struct pokemon));
     if(!tp->pokemones){
         free(tp);
         fclose(file);
@@ -147,7 +193,11 @@ tp1_t *tp1_leer_archivo(const char *nombre){
             // EXPLOTAR MEMORIA
             return  NULL;
         }
-
+        if(!insertar_nombre_ordenado(tp,p)){
+            fclose(file);
+            return NULL;
+        }
+        
     }
     fclose(file);
     return tp;
@@ -276,5 +326,84 @@ tp1_t *tp1_interseccion(tp1_t *un_tp, tp1_t *otro_tp){
         }
     }
     res->cantidad = k;
+    return res;
+}
+
+
+tp1_t *tp1_diferencia(tp1_t *un_tp, tp1_t *otro_tp){
+    if (un_tp == NULL) {
+        tp1_t *res = malloc(sizeof(tp1_t));
+        if (!res){
+            return NULL;  
+        } 
+        res->cantidad = 0;
+        res->capacidad = 0;
+        res->pokemones = NULL;
+        return res;
+    }
+    if (otro_tp == NULL) {
+        // Copiar un_tp
+        tp1_t *res = malloc(sizeof(tp1_t));
+        if (!res){
+            return NULL;
+        } 
+        res->cantidad = un_tp->cantidad;
+        res->capacidad = un_tp->cantidad;
+        res->pokemones = malloc(res->capacidad * sizeof(struct pokemon));
+        if (!res->pokemones) {
+            free(res); return NULL;
+        }
+        for (size_t i = 0; i < un_tp->cantidad; i++) {
+            res->pokemones[i] = un_tp->pokemones[i];
+            res->pokemones[i].nombre = strdup(un_tp->pokemones[i].nombre);
+        }
+        return res;
+    }
+
+    tp1_t *res =  malloc(sizeof(tp1_t));
+    if (!res){
+        return NULL;
+    }
+    res->cantidad = 0;
+    res->capacidad = un_tp->cantidad;
+    res->pokemones = malloc(res->capacidad * sizeof(struct pokemon));
+    size_t i = 0,j = 0, k= 0;
+    while(i<un_tp->cantidad && j < otro_tp->cantidad){
+        if (un_tp->pokemones[i].id < otro_tp->pokemones[j].id){
+            res->pokemones[k] = un_tp->pokemones[i];
+            res->pokemones[k].nombre = strdup(un_tp->pokemones[i].nombre);
+            i++;
+             k++;
+        }else if (un_tp->pokemones[i].id > otro_tp->pokemones[j].id){
+            j++;
+        }else{
+            i++;
+            j++;
+        }
+    }
+    while (i < un_tp->cantidad) {
+        res->pokemones[k] = un_tp->pokemones[i];
+        res->pokemones[k].nombre = strdup(un_tp->pokemones[i].nombre);
+        i++;
+        k++;
+    }
+    res->cantidad = k;
+    return res;
+}
+
+
+struct pokemon *tp1_buscar_nombre(tp1_t *tp, const char *nombre){
+    if (tp->cantidad == 0){
+        return NULL;
+    }
+    struct pokemon *res = busqueda_binaria_pokemon(tp,nombre,0,tp->cantidad-1);
+    return res;
+}
+
+struct pokemon *tp1_buscar_id(tp1_t *tp, int id){
+    if (tp->cantidad == 0){
+        return NULL;
+    }
+    struct pokemon *res = busqueda_binaria_id(tp,id,0,tp->cantidad-1);
     return res;
 }
