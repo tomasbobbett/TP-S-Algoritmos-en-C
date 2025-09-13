@@ -108,7 +108,7 @@ int main(int argc, char *argv[]){
         if (strcmp(criterio, "nombre") == 0) {
     		tp1_con_cada_pokemon(pokedex, imprimir_pokemon, NULL);
 		} else if (strcmp(criterio, "id") == 0) {
-   			 tp1_con_cada_pokemon(pokedex, imprimir_pokemon, NULL);
+   				tp1_con_cada_pokemon(pokedex, imprimir_pokemon, NULL);
 		}
 
     } else {
