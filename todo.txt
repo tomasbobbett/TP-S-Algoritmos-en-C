@@ -5,20 +5,20 @@ Primero implementar el tp1.h y usar este como libreria para hacer el main.c
 X       cambiar leer archivo ORDENADO 
 X       union
 X       interseccion
-    diferencia
-    buscar nombre
-    bucar id 
-    con cada pokemon
+X       diferencia
+X       buscar nombre
+X       bucar id 
+X       con cada pokemon
     destruir
 2. Terminar pruebas
 X       guardar archivo
 X       HACER PRUEBAS CUANDO DEVUELVA NULL
 X       union
 X       interseccion
-    diferencia
-    buscar nombre
-    bucar id 
-    con cada pokemon
-    destruir
+X       diferencia
+X       buscar nombre
+X       bucar id 
+X       con cada pokemon
+
 3. Implementar el main.c y entregar
 ----------------------------------

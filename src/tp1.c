@@ -54,9 +54,9 @@ static struct pokemon *busqueda_binaria_id(tp1_t *tp, int id,int inicio, int fin
     if (tp->pokemones[mid].id == id){
         return &tp->pokemones[mid];
     }else if ((tp->pokemones[mid].id< id)){
-        return busqueda_binaria_pokemon(tp,id,mid+1,final);
+        return busqueda_binaria_id(tp,id,mid+1,final);
     }
-    return busqueda_binaria_pokemon(tp,id,inicio,mid);
+    return busqueda_binaria_id(tp,id,inicio,mid);
 
 }
 static enum tipo_pokemon parsear_string_tipo(const char *tipo_str) {
@@ -406,4 +406,17 @@ struct pokemon *tp1_buscar_id(tp1_t *tp, int id){
     }
     struct pokemon *res = busqueda_binaria_id(tp,id,0,tp->cantidad-1);
     return res;
+}
+
+size_t tp1_con_cada_pokemon(tp1_t *un_tp, bool (*f)(struct pokemon *, void *), void *extra) {
+    if (!un_tp || !f) return 0;  // Protección contra punteros NULL
+
+    size_t cont = 0;
+    for (size_t i = 0; i < un_tp->cantidad; i++) {
+        if (!f(&un_tp->pokemones[i], extra)) {
+            break; // La función devolvió false → dejamos de aplicar
+        }
+        cont++;
+    }
+    return cont;
 }

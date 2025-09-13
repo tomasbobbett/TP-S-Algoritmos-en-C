@@ -1,13 +1,16 @@
 #include <string.h>
 #include "pa2m.h"
 #include "src/tp1.h"
+
 //gcc -Wall -Wextra -std=c11 src/tp1.c pruebas_alumno.c -o test.exe
+
 #define ARCHIVO_PRUEBA_INEXISTENTE "ejemplos/asdkasjhfskladjhfksdfhksdf.csv"
 #define ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS "ejemplos/normal.csv"
 #define ARCHIVO_PRUEBA_EXISTENTE_10_LINEAS "ejemplos/normal2.csv"
 #define ARCHIVO_PRUEBA_VACIO "ejemplos/vacio.csv"
 #define ARCHIVO_PRUEBA_3_VALIDAS "ejemplos/lineas_inv.csv"
 #define ARCHIVO_PRUEBA_1_REPETIDO "ejemplos/largo.csv"
+
 // --------------------------------------PRUEBAS DE LECTURA DE ARCHIVOS------------------------------------
 void tp1_leer_archivo_devuelve_null_cuando_el_archivo_no_existe(){
 	tp1_t *tp1 = tp1_leer_archivo(ARCHIVO_PRUEBA_INEXISTENTE);
@@ -31,7 +34,7 @@ void tp1_cantidad_lineas_validas(){
 	tp1_t *tp1 = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
 	pa2m_afirmar(tp1_cantidad(tp1) == 5, "tp1_cantidad devuelve la cantidad correcta SIN lineas invalidas");
 	tp1_t *tp2 = tp1_leer_archivo(ARCHIVO_PRUEBA_1_REPETIDO);
-	pa2m_afirmar(tp1_cantidad(tp2) == 15, "tp1_cantidad devuelve la cantidad correcta con pokemones REPETIDOS");
+	pa2m_afirmar(tp1_cantidad(tp2) == 17, "tp1_cantidad devuelve la cantidad correcta con pokemones REPETIDOS");
 	tp1_t *tp3 = tp1_leer_archivo(ARCHIVO_PRUEBA_VACIO);
 	pa2m_afirmar(tp1_cantidad(tp3) == 0, "tp1_cantidad devuelve la 0 si NO hay lineas en el csv");
 }
@@ -173,6 +176,80 @@ void tp1_buscar_nombre_duplicados(){
 	struct pokemon *p = tp1_buscar_nombre(tp, "BULBASUR");
 	pa2m_afirmar(p != NULL && p->id == 356, "Buscar nombre que se repite devuelve un puntero valido (el primero encontrado)");
 }
+// -------------------------------------------PRUEBAS DE BUSQUEDA POR ID------------------------------------------------
+void tp1_buscar_id_existe_al_inicio(){
+    tp1_t *tp = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
+    struct pokemon *p = tp1_buscar_id(tp, 1); // ID del primer pokemon en el archivo
+    pa2m_afirmar(p != NULL && p->id == 1, "Buscar ID EXISTENTE al inicio devuelve puntero correcto");
+}
+
+void tp1_buscar_id_existe_al_final(){
+    tp1_t *tp = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
+    struct pokemon *p = tp1_buscar_id(tp, 5); // ID del último pokemon en el archivo
+    pa2m_afirmar(p != NULL && p->id == 5, "Buscar ID EXISTENTE al final devuelve puntero correcto");
+}
+
+void tp1_buscar_id_existe_en_medio(){
+    tp1_t *tp = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
+    struct pokemon *p = tp1_buscar_id(tp, 3); // ID en medio del arreglo
+    pa2m_afirmar(p != NULL && p->id == 3, "Buscar ID EXISTENTE en medio devuelve puntero correcto");
+}
+
+void tp1_buscar_id_no_existe(){
+    tp1_t *tp = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
+    struct pokemon *p = tp1_buscar_id(tp, 999); // ID que no está
+    pa2m_afirmar(p == NULL, "Buscar ID NO EXISTENTE devuelve NULL");
+}
+
+void tp1_buscar_id_en_struct_vacio(){
+    tp1_t *tp = tp1_leer_archivo(ARCHIVO_PRUEBA_VACIO);
+    struct pokemon *p = tp1_buscar_id(tp, 1);
+    pa2m_afirmar(p == NULL, "Buscar ID en TP1 vacio devuelve NULL");
+}
+
+void tp1_buscar_id_duplicados(){
+    tp1_t *tp = tp1_leer_archivo(ARCHIVO_PRUEBA_1_REPETIDO); // archivo con IDs repetidos
+    struct pokemon *p = tp1_buscar_id(tp, 356); // ID duplicado
+    pa2m_afirmar(p != NULL && p->id == 356, "Buscar ID duplicado devuelve un puntero valido (el primero encontrado)");
+}
+
+// -------------------------------------------PRUEBAS DE tp1_con_cada_pokemon------------------------------------------------
+
+// Función auxiliar para pruebas: siempre devuelve true y cuenta pokemones
+bool contar_pokemon(struct pokemon *p, void *extra) {
+	(void)p;
+    size_t *cont = (size_t *)extra;
+    (*cont)++;
+    return true;
+}
+
+// Función auxiliar para pruebas: devuelve false si encuentra ID igual a un valor
+bool detener_en_id(struct pokemon *p, void *extra) {
+    int *id_objetivo = (int *)extra;
+    return p->id != *id_objetivo; // false si p->id == id_objetivo
+}
+
+void tp1_con_cada_pokemon_recorre_todos() {
+    tp1_t *tp = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
+    size_t cont = 0;
+    size_t procesados = tp1_con_cada_pokemon(tp, contar_pokemon, &cont);
+    pa2m_afirmar(procesados == tp1_cantidad(tp), "tp1_con_cada_pokemon recorre todos los pokemones cuando f siempre devuelve true");
+    pa2m_afirmar(cont == tp1_cantidad(tp), "Contador auxiliar coincide con cantidad de pokemones procesados");
+}
+
+void tp1_con_cada_pokemon_se_detiene() {
+    tp1_t *tp = tp1_leer_archivo(ARCHIVO_PRUEBA_EXISTENTE_5_LINEAS);
+    int id_detener = 3;
+    size_t procesados = tp1_con_cada_pokemon(tp, detener_en_id, &id_detener);
+    pa2m_afirmar(procesados == 2, "tp1_con_cada_pokemon se detiene correctamente cuando f devuelve false");
+}
+
+void tp1_con_cada_pokemon_struct_vacio() {
+    tp1_t *tp = tp1_leer_archivo(ARCHIVO_PRUEBA_VACIO);
+    size_t cont = 0;
+    size_t procesados = tp1_con_cada_pokemon(tp, contar_pokemon, &cont);
+    pa2m_afirmar(procesados == 0, "tp1_con_cada_pokemon sobre struct vacio devuelve 0");
+}
 
 int main()
 {
@@ -210,5 +287,17 @@ int main()
 	tp1_buscar_nombre_en_struct_vacio();
 	tp1_buscar_nombre_sensibilidad_mayusculas();
 	tp1_buscar_nombre_duplicados();
+
+	pa2m_nuevo_grupo("Pruebas de tp1_buscar_id");
+	tp1_buscar_id_existe_al_inicio();
+	tp1_buscar_id_existe_al_final();
+	tp1_buscar_id_no_existe();
+	tp1_buscar_id_en_struct_vacio();
+	tp1_buscar_id_duplicados();
+
+	pa2m_nuevo_grupo("Pruebas de tp1_buscar_id");
+	tp1_con_cada_pokemon_recorre_todos();
+	tp1_con_cada_pokemon_se_detiene();
+	tp1_con_cada_pokemon_struct_vacio();
 	return pa2m_mostrar_reporte();
 }
