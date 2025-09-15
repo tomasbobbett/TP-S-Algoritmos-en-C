@@ -22,7 +22,7 @@ El módulo expone operaciones típicas sobre conjuntos ordenados: lectura/escrit
   <li>pokemones — arreglo de struct pokemon ordenado por id (ascendente).</li>
   <li>pokemones_nombres — arreglo de struct pokemon ordenado por nombre (lexicográfico ascendente).</li>
 </ul>
-<img src="IMG/STRUCTS_PRINCIPALES.png">
+
 Mantener ambas vistas permite búsquedas binarias eficientes por id y por nombre, y operaciones de conjunto tipo "merge" en tiempo lineal.
 
 <h3>2. Formato CSV esperado</h3>
@@ -33,90 +33,78 @@ Cada línea del CSV debe tener 6 campos separados por comas:
 
 Donde <TIPO> es una cadena entre: ELEC, FUEG, PLAN, AGUA, NORM, FANT, PSI, LUCH. Líneas que no cumplan el formato (menos de 6 campos) se ignoran.
 
-3. Estructuras y representación en memoria
-enum tipo_pokemon
+<h3>3. Estructuras y representación en memoria</h3>
 
-Enumeración con los tipos permitidos. Se usa para representar el tipo de cada pokemon.
-
-struct pokemon
+  <h4>struct pokemon</h4>
 
 Contiene los campos:
-
-int id — identificador único.
-
-char *nombre — puntero a una copia dinámica del nombre (alocada con mi_strdup).
-
-enum tipo_pokemon tipo — tipo del pokemon.
-
-int ataque, defensa, velocidad — atributos.
+<ul>
+  <li>int id: identificador único.</li>
+  <li>char *nombre: puntero a una copia dinámica del nombre (alocada con mi_strdup).</li>
+  <li>enum tipo_pokemon tipo: tipo del pokemon.</li>
+  <li>int ataque, defensa, velocidad: atributos.</li>
+</ul>
 
 Observación: la implementación guarda una copia del nombre (malloc) por cada pokemon que se incluye en la colección. Internamente la misma dirección del nombre puede aparecer en ambos arreglos (se copia la estructura, pero el char * apunta al mismo bloque), por eso el destructor detecta y libera cada nombre una sola vez.
 
-struct tp1 (oculto)
+<h4>struct tp1 (oculto)</h4>
 
 Campos relevantes:
+<ul>
+  <li>struct pokemon *pokemones — arreglo dinámico (contiguo) ordenado por id.</li>
+  <li>struct pokemon *pokemones_nombres — arreglo dinámico ordenado por nombre.</li>
+  <li>size_t cantidad — número actual de pokemones almacenados.</li>
+  <li>size_t capacidad — capacidad actual (nº de elementos que caben antes de redimensionar).</li>
+</ul>
 
-struct pokemon *pokemones — arreglo dinámico (contiguo) ordenado por id.
-
-struct pokemon *pokemones_nombres — arreglo dinámico ordenado por nombre.
-
-size_t cantidad — número actual de pokemones almacenados.
-
-size_t capacidad — capacidad actual (nº de elementos que caben antes de redimensionar).
-
-Diseño: se usan arreglos contiguos (struct pokemon[]) por dos razones principales:
-
-Búsqueda binaria rápida (random access) tanto por id como por nombre.
-
-Iteración muy eficiente y uso de memoria compacta (localidad de referencia).
+Diseño: se usan DOS arreglos contiguos (struct pokemon[]) por dos razones principales:
+<ul>
+  <li>Búsqueda binaria rápida (random access) tanto por id como por nombre.</li>
+  <li>Iteración muy eficiente y uso de memoria compacta (localidad de referencia).</li>
+</ul>
 
 Redimensionado: la capacidad inicial es 10 y al llenarse se duplica (factor 2). Esta estrategia proporciona un comportamiento amortizado O(1) por inserción en lo que respecta al coste de reserva.
+<img src="IMG/ESTRUCTURAS_PRINCIPALES.png">
 
-4. Reservas y gestión de memoria
+<h3>4. Reservas y gestión de memoria</h3>
 
 Resumen de principales reservas:
+<ul>
+  <li>tp1_t (estructura principal): malloc(sizeof(tp1_t)).</li>
+  <li>Arreglos: malloc(capacidad * sizeof(struct pokemon)) para ambas vistas.</li>
+  <li>nombre de cada pokemon: mi_strdup hace malloc(strlen+1) y copia.</li>
+  <li>leer_linea(FILE*): buffer dinámico que duplica su capacidad cuando es necesario (estrategia cap *= 2).</li>
+</ul>
 
-tp1_t (estructura principal): malloc(sizeof(tp1_t)).
-
-Arreglos: malloc(capacidad * sizeof(struct pokemon)) para ambas vistas.
-
-nombre de cada pokemon: mi_strdup hace malloc(strlen+1) y copia.
-
-leer_linea(FILE*): buffer dinámico que duplica su capacidad cuando es necesario (estrategia cap *= 2).
-
-Por qué así:
-
-Arreglos dinámicos con duplicación son simples y eficientes en la práctica; minimizar multiplicaciones de memoria y mantener datos contiguos.
-
-mi_strdup asegura que cada nombre vive en memoria propia y no apunta a buffers temporales.
-
-Duplicar la estructura pokemon en ambos arreglos pero compartir el nombre permite mantener ordenamientos distintos sin duplicar el contenido de texto (solo se duplica el puntero en la estructura).
+<h4>Por qué así:</h4>
+<ul>
+  <li>Arreglos dinámicos con duplicación son simples y eficientes en la práctica; minimizar multiplicaciones de memoria y mantener datos contiguos.</li>
+  <li>mi_strdup asegura que cada nombre vive en memoria propia y no apunta a buffers temporales.</li>
+  <li>Duplicar la estructura pokemon en ambos arreglos pero compartir el nombre permite mantener ordenamientos distintos sin duplicar el contenido de texto (solo se duplica el puntero en la estructura).</li>
+</ul>
 
 Liberación: el destructor busca todas las direcciones nombre únicas (usando comparación de punteros) para free-ear cada char* una sola vez y evitar double free. Si la reserva auxiliar falla, tiene un fallback que libera los nombres encontrados en un arreglo principal.
 
-5. Documentación función por función
+<h3>5. Documentación de funciones</h3>
 
-Nota: las firmas están en tp1.h y la implementación en tp1.c.
-
-tp1_t *tp1_leer_archivo(const char *nombre)
-
-Qué hace: lee el CSV indicado por nombre y construye la estructura tp1_t con los pokemones válidos.
-
-Parámetros: const char *nombre — ruta del archivo de entrada.
-
-Retorno: puntero a tp1_t con los datos si todo OK, o NULL en caso de error (archivo inex., error de memoria, etc.).
-
-Comportamiento clave:
-
-Lee línea a línea con leer_linea (buffer dinámico).
-
-Parsea con sscanf(..."%d,%[^,],%[^,],%d,%d,%d"...).
-
-Ignora líneas mal formadas o con tipo no reconocido.
-
-Evita IDs repetidos buscando por id (binaria) antes de insertar.
-
-Crea mi_strdup(nombre) y construye struct pokemon p.
+        Nota: las firmas están en tp1.h y la implementación en tp1.c.
+<ul>
+  <li><h4>tp1_t *tp1_leer_archivo(const char *nombre)</h4></li>
+  <ul>
+    <li>Qué hace: lee el CSV indicado por nombre y construye la estructura tp1_t con los pokemones válidos.</li>
+    <li>Parámetros: const char *nombre — ruta del archivo de entrada.</li>
+    <li>Retorno: puntero a tp1_t con los datos si todo OK, o NULL en caso de error (archivo inex., error de memoria, etc.).</li>
+    <li>
+      Comportamiento clave:
+      <ul>
+        <li>Lee línea a línea con leer_linea (buffer dinámico).</li>
+        <li>Parsea con sscanf(..."%d,%[^,],%[^,],%d,%d,%d"...).</li>
+        <li>Ignora líneas mal formadas o con tipo no reconocido.</li>
+        <li>Evita IDs repetidos buscando por id (binaria) antes de insertar.</li>
+        <li>Crea mi_strdup(nombre) y construye struct pokemon p.</li>
+      </ul>
+    </li>
+  </ul>
 
 Inserta en ambos arreglos con insertar_ordeando (por id) y insertar_nombre_ordenado (por nombre). La incremetación de cantidad la hace insertar_nombre_ordenado.
 
@@ -157,6 +145,9 @@ Qué hace: escribe todos los pokemones en tp1->pokemones (orden por id) al archi
 Complejidad: O(n) tiempo (escritura de n líneas). Espacio auxiliar O(1).
 
 Retorno: tp1 en caso de éxito, NULL si tp1==NULL o no puede abrir el archivo.
+</ul>
+
+
 
 tp1_t *tp1_union(tp1_t *un_tp, tp1_t *otro_tp)
 
