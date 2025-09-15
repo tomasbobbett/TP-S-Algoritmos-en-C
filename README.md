@@ -108,102 +108,78 @@ Liberación: el destructor busca todas las direcciones nombre únicas (usando co
     </li>
     <li>
       Complejidad temporal:
-      Sea m el número de líneas/entradas procesadas y n el número final de pokemones almacenados. Cada inserción hace: tp1_buscar_id (O(log k) con k elementos actuales) + insertar_ordeando (desplazar elementos → O(k)) + insertar_nombre_ordenado (desplazar → O(k)).
-<h4>Por tanto, en el peor caso (entradas desordenadas) el coste dominante es el de los desplazamientos por inserción: Θ(n²)</h4>
-Además, las redimensiones por duplicación de capacidad implican copias periódicas con coste amortizado O(n) en total.
+      Sea m el número de líneas/entradas procesadas y n el número final de pokemones almacenados. Cada inserción hace: tp1_buscar_id (O(log k) con k elementos actuales) +             insertar_ordeando (desplazar elementos → O(k)) + insertar_nombre_ordenado (desplazar → O(k)).
+    <h4>Por tanto, en el peor caso (entradas desordenadas) el coste dominante es el de los desplazamientos por inserción: Θ(n²)</h4>
+      Además, las redimensiones por duplicación de capacidad implican copias periódicas con coste amortizado O(n) en total.
     </li>
-    <li>Memoria: O(n) espacio (dos arreglos de struct pokemon más n nombres en heap).</li>
-  </ul>
-
-<h4>Notas/observaciones:</h4>
-<ul>
-  <li>insertar_ordeando no incrementa cantidad por diseño (la incrementa la inserción por nombre). Si se reutiliza esta función fuera del flujo actual hay que tener cuidado.</li>
-  <li>sscanf usa buffers estáticos locales (nombre_poke[25656]) — si una línea supera ese tamaño habría riesgo; en la práctica ese tamaño es grande pero no infinito.</li>
+    
+  <li>Memoria: O(n) espacio (dos arreglos de struct pokemon más n nombres en heap).</li>
+ 
+  <h4>Notas/observaciones:</h4>
+  <ul>
+    <li>insertar_ordeando no incrementa cantidad por diseño (la incrementa la inserción por nombre). Si se reutiliza esta función fuera del flujo actual hay que tener cuidado.</li>
+    <li>sscanf usa buffers estáticos locales (nombre_poke[25656]) — si una línea supera ese tamaño habría riesgo; en la práctica ese tamaño es grande pero no infinito.</li>
   <li>parsear_string_tipo devuelve -1 para tipo inválido; en el código original se guarda el resultado en una variable char tipo — sería más correcto usar enum tipo_pokemon tipo o int para evitar problemas de signo/tamaño.</li>
+  </ul>
+  </ul>
+<li><h4>size_t tp1_cantidad(tp1_t *tp1)</h4></li>
+<ul>
+  <li>Qué hace: devuelve tp1->cantidad.</li>
+  <li>Complejidad: O(1) trivial.</li>  
 </ul>
 
-<h4>size_t tp1_cantidad(tp1_t *tp1)</h4>
+    Notas: devuelve 0 si tp1 == NULL.
+<li><h4>tp1_t *tp1_guardar_archivo(tp1_t *tp1, const char *nombre)</h4></li>
 
-Qué hace: devuelve tp1->cantidad.
-
-Complejidad: O(1).
-
-Notas: devuelve 0 si tp1 == NULL.
-
-tp1_t *tp1_guardar_archivo(tp1_t *tp1, const char *nombre)
-
-Qué hace: escribe todos los pokemones en tp1->pokemones (orden por id) al archivo nombre, en el mismo formato CSV que tp1_leer_archivo acepta.
-
-Complejidad: O(n) tiempo (escritura de n líneas). Espacio auxiliar O(1).
-
-Retorno: tp1 en caso de éxito, NULL si tp1==NULL o no puede abrir el archivo.
+<ul>
+  <li>Qué hace: escribe todos los pokemones en tp1->pokemones (orden por id) al archivo nombre, en el mismo formato CSV que tp1_leer_archivo acepta.</li>
+  <li>Complejidad: O(n) tiempo (escritura de n líneas). Espacio auxiliar O(1).</li>
+  <li>Retorno: tp1 en caso de éxito, NULL si tp1==NULL o no puede abrir el archivo.</li>
 </ul>
 
+<li><h4>tp1_t *tp1_union(tp1_t *un_tp, tp1_t *otro_tp)</h4></li>
 
+<ul>
+  <li>Qué hace: construye un nuevo tp1 que representa la unión por id de ambos conjuntos. Si hay repetidos se prefiere el elemento de un_tp.</li>
+  <li>Implementación: algoritmo "merge" de dos arreglos ordenados por id (dos punteros i, j). Para cada elemento elegido se clona la estructura y se duplica el nombre con mi_strdup.</li>
+  <li>Complejidad: <h4>O(n + m)</h4> tiempo (n = |un_tp|, m = |otro_tp|) + coste de copias de strings (sum(L_i)). Espacio: O(n + m) para el nuevo arreglo.</li>
+</ul>
 
-tp1_t *tp1_union(tp1_t *un_tp, tp1_t *otro_tp)
-
-Qué hace: construye un nuevo tp1 que representa la unión por id de ambos conjuntos. Si hay repetidos se prefiere el elemento de un_tp.
-
-Implementación: algoritmo "merge" de dos arreglos ordenados por id (dos punteros i, j). Para cada elemento elegido se clona la estructura y se duplica el nombre con mi_strdup.
-
-Complejidad: O(n + m) tiempo (n = |un_tp|, m = |otro_tp|) + coste de copias de strings (sum(L_i)). Espacio: O(n + m) para el nuevo arreglo.
-
-Notas: res->pokemones_nombres queda como NULL en la implementación; el resultado no tiene la vista por nombre construida. Si se requiere buscar por nombre en el resultado, hay que construir pokemones_nombres (por ejemplo, creando un arreglo de punteros y ordenándolo, o insertando ordenadamente y actualizando cantidad).
-
-tp1_t *tp1_interseccion(tp1_t *un_tp, tp1_t *otro_tp)
-
-Qué hace: devuelve un nuevo tp1 con los pokemones que estén en ambos conjuntos (igual id).
-
-Implementación: merge two-pointer aprovechando orden por id.
-
-Complejidad: O(n + m) tiempo, O(k) memoria (k = tamaño de la intersección).
-
-Notas: idem a union — pokemones_nombres queda NULL.
-
-tp1_t *tp1_diferencia(tp1_t *un_tp, tp1_t *otro_tp)
-
-Qué hace: devuelve los pokemones que están en un_tp pero no en otro_tp (por id).
-
-Complejidad: O(n + m) tiempo, O(n) memoria en peor caso.
-
-Notas: idem con pokemones_nombres.
-
-struct pokemon *tp1_buscar_nombre(tp1_t *tp, const char *nombre)
-
-Qué hace: busca un pokemon por nombre en pokemones_nombres mediante búsqueda binaria.
-
-Complejidad: O(log n) comparaciones de strings; cada comparación strcmp es O(L) donde L es la longitud del nombre comparado, por lo que el coste es O(L · log n).
-
-Precondiciones: tp no nulo, tp->cantidad > 0, tp->pokemones_nombres != NULL y nombre != NULL.
-
-Retorno: puntero al struct pokemon dentro del arreglo pokemones_nombres, o NULL si no se encuentra.
-
-struct pokemon *tp1_buscar_id(tp1_t *tp, int id)
-
-Qué hace: busca por id usando búsqueda binaria en pokemones.
-
-Complejidad: O(log n).
-
-Retorno: puntero a la entrada en tp->pokemones o NULL.
-
-size_t tp1_con_cada_pokemon(tp1_t *un_tp, bool (*f)(struct pokemon *, void *), void *extra)
-
-Qué hace: aplica la función f a cada pokemon según orden por id (desde i=0 a cantidad-1). Si f devuelve false, la iteración se detiene.
-
-Complejidad: O(k) donde k es el número de pokemones realmente visitados (hasta cantidad).
-
-Retorno: cantidad de pokemones sobre los que se aplicó f.
-
-void tp1_destruir(tp1_t *tp1)
-
-Qué hace: libera toda la memoria asociada a tp1, incluyendo los char *nombre (sin doble free).
-
-Algoritmo: recorre ambos arreglos, construye una tabla auxiliar unicos con las direcciones nombre detectadas y free-ea cada una una sola vez. Si no puede reservar unicos, tiene un fallback que libera los nombre presentes en un arreglo principal.
-
-Complejidad: en el peor caso la detección de duplicados se hace mediante búsqueda lineal en unicos para cada nombre, por lo que el tiempo es O(n²) en el peor caso. Espacio extra O(k) para el array unicos.
-
-6. Primitivas auxiliares (explicación detallada)
-leer_linea(FILE *f)
-
-Lee la entrada carácter a carácter con fgetc, creciend
+  <li><h4>tp1_t *tp1_interseccion(tp1_t *un_tp, tp1_t *otro_tp)</h4></li>
+  <ul>
+    <li>Qué hace: devuelve un nuevo tp1 con los pokemones que estén en ambos conjuntos (igual id).</li>
+    <li>Implementación: merge two-pointer aprovechando orden por id.</li>
+    <li>Complejidad: O(n + m) tiempo, O(k) memoria (k = tamaño de la intersección).</li>
+  </ul>
+  <li><h4>tp1_t *tp1_diferencia(tp1_t *un_tp, tp1_t *otro_tp)</h4></li>
+  <ul>
+    <li>Qué hace: devuelve los pokemones que están en un_tp pero no en otro_tp (por id).</li>
+    <li>Complejidad: O(n + m) tiempo, O(n) memoria en peor caso.</li>
+    <li>Notas: idem con pokemones_nombres.</li>
+  </ul>
+  <li><h4>struct pokemon *tp1_buscar_nombre(tp1_t *tp, const char *nombre)</h4></li>
+  <ul>
+    <li>Qué hace: busca un pokemon por nombre en pokemones_nombres mediante búsqueda binaria.</li>
+    <li>Complejidad: O(log n) comparaciones de strings; cada comparación strcmp es O(L) donde L es la longitud del nombre comparado, por lo que el coste es O(L · log n).</li>
+    <li>Precondiciones: tp no nulo, tp->cantidad > 0, tp->pokemones_nombres != NULL y nombre != NULL.</li>
+    <li>Retorno: puntero al struct pokemon dentro del arreglo pokemones_nombres, o NULL si no se encuentra.</li>
+  </ul>
+  <li><h4>struct pokemon *tp1_buscar_id(tp1_t *tp, int id)</h4></li>
+  <ul>
+    <li>Qué hace: busca por id usando búsqueda binaria en pokemones.</li>
+    <li>Complejidad: O(log n) ya que implementamos busqueda binaria de forma recursiva al tener el arreglo de pokemones ya ordenado.</li>
+    <li>Retorno: puntero a la entrada en tp->pokemones o NULL.</li>
+  </ul>
+  <li><h4>size_t tp1_con_cada_pokemon(tp1_t *un_tp, bool (*f)(struct pokemon *, void *), void *extra)</h4></li>
+  <ul>
+    <li>Qué hace: aplica la función f a cada pokemon según orden por id (desde i=0 a cantidad-1). Si f devuelve false, la iteración se detiene.</li>
+    <li>Complejidad: O(k) donde k es el número de pokemones realmente visitados (hasta cantidad).</li>
+    <li>Retorno: cantidad de pokemones sobre los que se aplicó f.</li>
+  </ul>
+  <li><h4>void tp1_destruir(tp1_t *tp1)</h4></li>
+  <ul>
+    <li>Qué hace: libera toda la memoria asociada a tp1, incluyendo los char *nombre (sin doble free).</li>
+    <li>Algoritmo: recorre ambos arreglos, construye una tabla auxiliar unicos con las direcciones nombre detectadas y free-ea cada una una sola vez. Si no puede reservar unicos, tiene un fallback que libera los nombre presentes en un arreglo principal.</li>
+    <li>Complejidad: en el peor caso la detección de duplicados se hace mediante búsqueda lineal en unicos para cada nombre, por lo que el tiempo es O(n²) en el peor caso. Espacio extra O(k) para el array unicos.</li>
+  </ul>
+</ul>
