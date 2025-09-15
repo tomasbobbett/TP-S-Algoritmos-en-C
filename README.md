@@ -23,7 +23,7 @@ El módulo expone operaciones típicas sobre conjuntos ordenados: lectura/escrit
   <li>pokemones_nombres — arreglo de struct pokemon ordenado por nombre (lexicográfico ascendente).</li>
 </ul>
 
-<img src= "IMG/array.png"> 
+<img src= "IMG/arrays.png"> 
 
 Mantener ambas vistas permite búsquedas binarias eficientes por id y por nombre, y operaciones de conjunto tipo "merge" en tiempo lineal.
 
