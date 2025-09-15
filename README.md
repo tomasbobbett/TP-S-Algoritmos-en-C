@@ -102,35 +102,27 @@ Liberación: el destructor busca todas las direcciones nombre únicas (usando co
         <li>Ignora líneas mal formadas o con tipo no reconocido.</li>
         <li>Evita IDs repetidos buscando por id (binaria) antes de insertar.</li>
         <li>Crea mi_strdup(nombre) y construye struct pokemon p.</li>
+        <li>Inserta en ambos arreglos con insertar_ordeando (por id) y insertar_nombre_ordenado (por nombre). La incremetación de cantidad la hace insertar_nombre_ordenado.</li>
+        <li>Si falla cualquier reserva, libera lo ya reservado y devuelve NULL.</li>
       </ul>
     </li>
+    <li>
+      Complejidad temporal:
+      Sea m el número de líneas/entradas procesadas y n el número final de pokemones almacenados. Cada inserción hace: tp1_buscar_id (O(log k) con k elementos actuales) + insertar_ordeando (desplazar elementos → O(k)) + insertar_nombre_ordenado (desplazar → O(k)).
+<h4>Por tanto, en el peor caso (entradas desordenadas) el coste dominante es el de los desplazamientos por inserción: Θ(n²)</h4>
+Además, las redimensiones por duplicación de capacidad implican copias periódicas con coste amortizado O(n) en total.
+    </li>
+    <li>Memoria: O(n) espacio (dos arreglos de struct pokemon más n nombres en heap).</li>
   </ul>
 
-Inserta en ambos arreglos con insertar_ordeando (por id) y insertar_nombre_ordenado (por nombre). La incremetación de cantidad la hace insertar_nombre_ordenado.
+<h4>Notas/observaciones:</h4>
+<ul>
+  <li>insertar_ordeando no incrementa cantidad por diseño (la incrementa la inserción por nombre). Si se reutiliza esta función fuera del flujo actual hay que tener cuidado.</li>
+  <li>sscanf usa buffers estáticos locales (nombre_poke[25656]) — si una línea supera ese tamaño habría riesgo; en la práctica ese tamaño es grande pero no infinito.</li>
+  <li>parsear_string_tipo devuelve -1 para tipo inválido; en el código original se guarda el resultado en una variable char tipo — sería más correcto usar enum tipo_pokemon tipo o int para evitar problemas de signo/tamaño.</li>
+</ul>
 
-Si falla cualquier reserva, libera lo ya reservado y devuelve NULL.
-
-Complejidad temporal:
-
-Sea m el número de líneas/entradas procesadas y n el número final de pokemones almacenados.
-
-Cada inserción hace: tp1_buscar_id (O(log k) con k elementos actuales) + insertar_ordeando (desplazar elementos → O(k)) + insertar_nombre_ordenado (desplazar → O(k)).
-
-Por tanto, en el peor caso (entradas desordenadas) el coste dominante es el de los desplazamientos por inserción: Θ(n²) tiempo total en el peor caso.
-
-Además, las redimensiones por duplicación de capacidad implican copias periódicas con coste amortizado O(n) en total.
-
-Memoria: O(n) espacio (dos arreglos de struct pokemon más n nombres en heap).
-
-Notas/observaciones:
-
-insertar_ordeando no incrementa cantidad por diseño (la incrementa la inserción por nombre). Si se reutiliza esta función fuera del flujo actual hay que tener cuidado.
-
-sscanf usa buffers estáticos locales (nombre_poke[25656]) — si una línea supera ese tamaño habría riesgo; en la práctica ese tamaño es grande pero no infinito.
-
-parsear_string_tipo devuelve -1 para tipo inválido; en el código original se guarda el resultado en una variable char tipo — sería más correcto usar enum tipo_pokemon tipo o int para evitar problemas de signo/tamaño.
-
-size_t tp1_cantidad(tp1_t *tp1)
+<h4>size_t tp1_cantidad(tp1_t *tp1)</h4>
 
 Qué hace: devuelve tp1->cantidad.
 
