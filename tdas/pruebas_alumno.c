@@ -1,17 +1,18 @@
 #include "pa2m.h"
-
-void prueba_simple()
+#include "src/lista.h"
+void prueba_lista_vacia()
 {
-	int i = 5;
-	int j = 16;
-	pa2m_afirmar(i == j, "i es igual a j (%d == %d)", i, j);
-	pa2m_afirmar(2 * i == 10, "2*i es igual a 2 (%d)", 2 * i);
+	lista_t *lista =  lista_crear();
+	pa2m_afirmar(lista_cantidad(lista) == 0, "Una lista recien creada devuelve 0 de cantidad");
+	pa2m_afirmar(lista_vacia(lista), "Una lista recien creada devuelve que esta vacia");
+	
+	//tp1_destruir(lista);
 }
 
 int main()
 {
-	pa2m_nuevo_grupo("============== ??? ===============");
-	prueba_simple();
+	pa2m_nuevo_grupo("============== LISTA RECIEN CREADA ===============");
+	prueba_lista_vacia();
 
 	return pa2m_mostrar_reporte();
 }
