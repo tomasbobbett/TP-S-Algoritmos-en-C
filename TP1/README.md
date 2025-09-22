@@ -23,6 +23,8 @@ El módulo expone operaciones típicas sobre conjuntos ordenados: lectura/escrit
   <li>pokemones_nombres — arreglo de struct pokemon ordenado por nombre (lexicográfico ascendente).</li>
 </ul>
 
+<img src= "IMG/arrays.png"> 
+
 Mantener ambas vistas permite búsquedas binarias eficientes por id y por nombre, y operaciones de conjunto tipo "merge" en tiempo lineal.
 
 <h3>2. Formato CSV esperado</h3>
@@ -121,6 +123,7 @@ Liberación: el destructor busca todas las direcciones nombre únicas (usando co
     <li>sscanf usa buffers estáticos locales (nombre_poke[25656]) — si una línea supera ese tamaño habría riesgo; en la práctica ese tamaño es grande pero no infinito.</li>
   <li>parsear_string_tipo devuelve -1 para tipo inválido; en el código original se guarda el resultado en una variable char tipo — sería más correcto usar enum tipo_pokemon tipo o int para evitar problemas de signo/tamaño.</li>
   </ul>
+  <img src="IMG/leer_archivo.png">
   </ul>
 <li><h4>size_t tp1_cantidad(tp1_t *tp1)</h4></li>
 <ul>
@@ -136,7 +139,7 @@ Liberación: el destructor busca todas las direcciones nombre únicas (usando co
   <li>Complejidad: O(n) tiempo (escritura de n líneas). Espacio auxiliar O(1).</li>
   <li>Retorno: tp1 en caso de éxito, NULL si tp1==NULL o no puede abrir el archivo.</li>
 </ul>
-
+<img src = "IMG/guardar_archivo.png">
 <li><h4>tp1_t *tp1_union(tp1_t *un_tp, tp1_t *otro_tp)</h4></li>
 
 <ul>
@@ -144,7 +147,7 @@ Liberación: el destructor busca todas las direcciones nombre únicas (usando co
   <li>Implementación: algoritmo "merge" de dos arreglos ordenados por id (dos punteros i, j). Para cada elemento elegido se clona la estructura y se duplica el nombre con mi_strdup.</li>
   <li>Complejidad: <h4>O(n + m)</h4> tiempo (n = |un_tp|, m = |otro_tp|) + coste de copias de strings (sum(L_i)). Espacio: O(n + m) para el nuevo arreglo.</li>
 </ul>
-
+<img src = "IMG/union.png">
   <li><h4>tp1_t *tp1_interseccion(tp1_t *un_tp, tp1_t *otro_tp)</h4></li>
   <ul>
     <li>Qué hace: devuelve un nuevo tp1 con los pokemones que estén en ambos conjuntos (igual id).</li>
