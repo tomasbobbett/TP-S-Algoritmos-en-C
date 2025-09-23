@@ -1,5 +1,5 @@
 #include "lista.h"
-
+#include <stdio.h>
 
 typedef struct nodo {
     void *dato;
@@ -53,15 +53,65 @@ size_t lista_cantidad(lista_t *lista){
 
 // lista_agregar (al final): O(1) (si guardamos cola)
 bool lista_agregar(lista_t *lista, void *dato){
-    if (lista->cola == NULL){
-        lista->cola = crear_nodo(dato,NULL);
-        lista->cantidad++;
+    nodo_t *nodo = crear_nodo(dato,NULL); 
+    if (!nodo){
+        return false;
     }
-    
+    if (lista->cantidad == 0){
+        lista->cola = nodo;
+        lista->cabeza = nodo;
+        lista->cantidad++;
+        return true;
+    }
+    lista->cola->siguiente = nodo; 
+    lista->cola = nodo;
+    lista->cantidad++;
+    return true;
 }
 // lista_insertar: O(n) (recorrer hasta la posición)
-
+bool lista_insertar(lista_t *lista, void *elemento, size_t posicion){
+    if (posicion > lista->cantidad || lista->cantidad==0){
+        return false;
+    }
+    if (posicion == 0){
+        nodo_t *cabeza_vieja = lista->cabeza; 
+        nodo_t *nuevo_nodo = crear_nodo(elemento, cabeza_vieja);
+        lista->cabeza = nuevo_nodo;
+        lista->cantidad++;
+        return true;
+    }else if (posicion == lista->cantidad - 1){
+        lista_agregar(lista, elemento);
+    }
+    size_t posicion_actual = 0;
+    nodo_t *act = lista->cabeza;
+    while (posicion_actual != posicion-1){
+        act = act->siguiente;
+        posicion_actual++;
+    }    // 4, 5, 6, 4, 5
+    nodo_t *nuevo_nodo = crear_nodo(elemento, act->siguiente);
+    act->siguiente = nuevo_nodo;
+    lista->cantidad++;
+    return true;
+}
 // lista_eliminar_elemento: O(n)
+void *lista_eliminar_elemento(lista_t *lista, size_t posicion){
+    if (lista->cantidad == 0 || posicion > lista->cantidad ){
+        return false;
+    }
+    if (posicion == 0){
+        nodo_t *borrado = lista->cabeza;
+        lista->cabeza = borrado->siguiente;
+        lista->cantidad--;
+        return borrado->dato;
+    }else if (posicion == lista->cantidad - 1){
+        nodo_t *borrado = lista->cola;
+
+        //IMPLEMETAR BORRAR ULTIMO NO SE COMO MIERDA HACER////////////////////////////////////////
+        
+        return borrado->dato;
+    }
+    return lista->cabeza;
+}
 
 // lista_buscar_posicion: O(n)
 
