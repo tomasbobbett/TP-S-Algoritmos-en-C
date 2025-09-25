@@ -184,6 +184,36 @@ size_t lista_con_cada_elemento(lista_t *lista, bool (*f)(void *, void *), void *
     }
     return cantidad_modificados;
 }
+
+void lista_destruir(lista_t *lista){
+    if (!lista){
+        return;
+    }
+    nodo_t *actual = lista->cabeza;
+    while (actual){
+        nodo_t *sig = actual->siguiente;
+        free(actual);
+        actual = sig;
+    }
+    free(lista);
+}
+
+void lista_destruir_todo(lista_t *lista, void (*destructor)(void *)){
+    if (!lista){
+        return;
+    }
+    nodo_t *actual = lista->cabeza;
+    while (actual){
+        nodo_t *sig = actual->siguiente;
+        if (destructor){
+            destructor(actual->dato);
+        }
+        free(actual);
+        actual = sig;
+    }
+    free(lista);
+}
+
 //-------------------------------------------------ITERADOR---------------------------------------------------
 // Iterador: avanzar y obtener actual son O(1)
 

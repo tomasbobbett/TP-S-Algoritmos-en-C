@@ -99,7 +99,7 @@ void prueba_lista_buscar() {
     pa2m_afirmar(lista_buscar_posicion(lista, &x, comparador_int) == -1,
         "Buscar un elemento inexistente devuelve -1");
 
-    // //lista_destruir(lista);
+    lista_destruir(lista);
 }
 
 
@@ -142,8 +142,8 @@ void prueba_lista_con_cada_elemento()
 	aplicados = lista_con_cada_elemento(vacia, sumar_elementos, &suma);
 	pa2m_afirmar(aplicados == 0, "En una lista vacia no se aplica la funcion");
 
-	// //lista_destruir(lista);
-	// //lista_destruir(vacia);
+	lista_destruir(lista);
+	lista_destruir(vacia);
 }
 
 void prueba_lista_iterador()
@@ -158,7 +158,7 @@ void prueba_lista_iterador()
 	pa2m_afirmar(lista_iterador_obtener_actual(it_vacio) == NULL,
 		"Un iterador creado sobre lista vacia devuelve NULL al obtener actual");
 	lista_iterador_destruir(it_vacio);
-	//lista_destruir(vacia, NULL);
+	lista_destruir(vacia);
 
 	// Caso lista con un solo elemento
 	lista_t *una = lista_crear();
@@ -172,7 +172,7 @@ void prueba_lista_iterador()
 	pa2m_afirmar(!lista_iterador_hay_mas_elementos(it_una),
 		"Iterador no tiene mas elementos luego de avanzar al final");
 	lista_iterador_destruir(it_una);
-	//lista_destruir(una, NULL);
+	lista_destruir(una);
 
 	// Caso lista con varios elementos
 	lista_t *lista = lista_crear();
@@ -192,7 +192,7 @@ void prueba_lista_iterador()
 	pa2m_afirmar(i == 3, "Iterador recorrio todos los elementos");
 
 	lista_iterador_destruir(it);
-	//lista_destruir(lista, NULL);
+	lista_destruir(lista);
 }
 
 
