@@ -6,14 +6,22 @@
 void prueba_lista_vacia()
 {
 	int num = 1;
-	lista_t *lista =  lista_crear();
-	pa2m_afirmar(lista_cantidad(lista) == 0, "Una lista recien creada devuelve 0 de cantidad");
-	pa2m_afirmar(lista_vacia(lista), "Una lista recien creada devuelve que esta vacia");
-	pa2m_afirmar(lista_insertar(lista,&num,0) == false && lista_insertar(lista,&num,1) == false, "Una lista recien creada devuelve false si se intenta insertar elemento en alguna posicion");
-	pa2m_afirmar(lista_eliminar_elemento(lista,0) == false, "Eliminar en una lista vacia devuelve false");
+	lista_t *lista = lista_crear();
+	pa2m_afirmar(lista_cantidad(lista) == 0,
+		     "Una lista recien creada devuelve 0 de cantidad");
+	pa2m_afirmar(lista_vacia(lista),
+		     "Una lista recien creada devuelve que esta vacia");
+	pa2m_afirmar(
+		lista_insertar(lista, &num, 0) == false &&
+			lista_insertar(lista, &num, 1) == false,
+		"Una lista recien creada devuelve false si se intenta insertar elemento en alguna posicion");
+	pa2m_afirmar(lista_eliminar_elemento(lista, 0) == false,
+		     "Eliminar en una lista vacia devuelve false");
 	lista_agregar(lista, &num);
-	pa2m_afirmar(lista_cantidad(lista) == 1, "Agregar un elemento a la lista vacia suma la cantidad correcta");
-	
+	pa2m_afirmar(
+		lista_cantidad(lista) == 1,
+		"Agregar un elemento a la lista vacia suma la cantidad correcta");
+
 	//tp1_destruir(lista);
 }
 
@@ -23,84 +31,114 @@ void prueba_lista_borrar()
 	int num2 = 2;
 	int ultimo = 100;
 	int medio = 50;
-	lista_t *lista =  lista_crear();
-	lista_agregar(lista,&num);
-	lista_agregar(lista,&num2);
-	pa2m_afirmar(lista_eliminar_elemento(lista,0) == &num && lista_eliminar_elemento(lista,0) == &num2,
-	"Eliminar el PRIMER elemento de la lista devuelve el valor eliminado correctamente");
-	lista_agregar(lista,&num);
-	lista_agregar(lista,&medio);
-	lista_agregar(lista,&num);
-	lista_agregar(lista,&ultimo);
-	pa2m_afirmar(lista_eliminar_elemento(lista,lista_cantidad(lista)-1) == &ultimo,
-	"Eliminar el ULTIMO elemento de la lista devuelve el valor eliminado correctamente");
-	pa2m_afirmar(lista_eliminar_elemento(lista,(lista_cantidad(lista)-1)/2) == &medio,
-	"Eliminar el elemento del MEDIO de la lista devuelve el valor eliminado correctamente");
-	pa2m_afirmar(!lista_eliminar_elemento(lista,50),
-	"Intentar eliminar en una posicion inexistente devuelve NULL");
-	pa2m_afirmar(lista_eliminar_elemento(lista,1) == &num,
-	"Eliminar el ulitmo en una lista de DOS elementos devuelve el valor eliminado correctamente");
-	pa2m_afirmar(lista_eliminar_elemento(lista,0) == &num,
-	"Eliminar el ulitmo en una lista de UN elemento devuelve el valor eliminado correctamente");
-	pa2m_afirmar(lista_cantidad(lista) == 0,
-	"La cantidad de elementos es 0 luego de eliminar todos los elementos de la lista");
-	pa2m_afirmar(lista_eliminar_elemento(lista,0) == NULL,
-	"Intentar eliminar algun elemento luego de eliminar todos devuelve NULL");
+	lista_t *lista = lista_crear();
+	lista_agregar(lista, &num);
+	lista_agregar(lista, &num2);
+	pa2m_afirmar(
+		lista_eliminar_elemento(lista, 0) == &num &&
+			lista_eliminar_elemento(lista, 0) == &num2,
+		"Eliminar el PRIMER elemento de la lista devuelve el valor eliminado correctamente");
+	lista_agregar(lista, &num);
+	lista_agregar(lista, &medio);
+	lista_agregar(lista, &num);
+	lista_agregar(lista, &ultimo);
+	pa2m_afirmar(
+		lista_eliminar_elemento(lista, lista_cantidad(lista) - 1) ==
+			&ultimo,
+		"Eliminar el ULTIMO elemento de la lista devuelve el valor eliminado correctamente");
+	pa2m_afirmar(
+		lista_eliminar_elemento(lista, (lista_cantidad(lista) - 1) /
+						       2) == &medio,
+		"Eliminar el elemento del MEDIO de la lista devuelve el valor eliminado correctamente");
+	pa2m_afirmar(
+		!lista_eliminar_elemento(lista, 50),
+		"Intentar eliminar en una posicion inexistente devuelve NULL");
+	pa2m_afirmar(
+		lista_eliminar_elemento(lista, 1) == &num,
+		"Eliminar el ulitmo en una lista de DOS elementos devuelve el valor eliminado correctamente");
+	pa2m_afirmar(
+		lista_eliminar_elemento(lista, 0) == &num,
+		"Eliminar el ulitmo en una lista de UN elemento devuelve el valor eliminado correctamente");
+	pa2m_afirmar(
+		lista_cantidad(lista) == 0,
+		"La cantidad de elementos es 0 luego de eliminar todos los elementos de la lista");
+	pa2m_afirmar(
+		lista_eliminar_elemento(lista, 0) == NULL,
+		"Intentar eliminar algun elemento luego de eliminar todos devuelve NULL");
 }
 
-void prueba_lista_agregar_insertar() {
-    int a = 1, b = 2, c = 3, d = 4;
-    lista_t *lista = lista_crear();
-    pa2m_afirmar(!lista_insertar(lista, &a,0 ), "Insertar elemento al INICIO devuelve false si no hay elementos");
-    pa2m_afirmar(lista_agregar(lista, &a), "Agregar elemento al final devuelve true");
-    pa2m_afirmar(lista_agregar(lista, &b), "Agregar segundo elemento al final devuelve true");
-    pa2m_afirmar(lista_insertar(lista, &c, 1), "Insertar elemento en posicion intermedia devuelve true");
-    pa2m_afirmar(lista_insertar(lista, &d, 0), "Insertar elemento en posicion 0 devuelve true");
-    pa2m_afirmar(lista_cantidad(lista) == 4, "Cantidad de elementos es correcta luego de agregar/insertar");
-    pa2m_afirmar(lista_buscar_elemento(lista, 0) == &d, "Primer elemento es el correcto tras insercion");
-    pa2m_afirmar(lista_buscar_elemento(lista, 1) == &a, "Elemento en posicion 1 es correcto");
-    pa2m_afirmar(lista_buscar_elemento(lista, 2) == &c, "Elemento en posicion 2 es correcto");
-    pa2m_afirmar(lista_buscar_elemento(lista, 3) == &b, "Ultimo elemento es correcto");
+void prueba_lista_agregar_insertar()
+{
+	int a = 1, b = 2, c = 3, d = 4;
+	lista_t *lista = lista_crear();
+	pa2m_afirmar(
+		!lista_insertar(lista, &a, 0),
+		"Insertar elemento al INICIO devuelve false si no hay elementos");
+	pa2m_afirmar(lista_agregar(lista, &a),
+		     "Agregar elemento al final devuelve true");
+	pa2m_afirmar(lista_agregar(lista, &b),
+		     "Agregar segundo elemento al final devuelve true");
+	pa2m_afirmar(lista_insertar(lista, &c, 1),
+		     "Insertar elemento en posicion intermedia devuelve true");
+	pa2m_afirmar(lista_insertar(lista, &d, 0),
+		     "Insertar elemento en posicion 0 devuelve true");
+	pa2m_afirmar(
+		lista_cantidad(lista) == 4,
+		"Cantidad de elementos es correcta luego de agregar/insertar");
+	pa2m_afirmar(lista_buscar_elemento(lista, 0) == &d,
+		     "Primer elemento es el correcto tras insercion");
+	pa2m_afirmar(lista_buscar_elemento(lista, 1) == &a,
+		     "Elemento en posicion 1 es correcto");
+	pa2m_afirmar(lista_buscar_elemento(lista, 2) == &c,
+		     "Elemento en posicion 2 es correcto");
+	pa2m_afirmar(lista_buscar_elemento(lista, 3) == &b,
+		     "Ultimo elemento es correcto");
 }
 
-int comparador_int(const void *a, const void *b) {
-    if (*(int*)a == *(int*)b){
+int comparador_int(const void *a, const void *b)
+{
+	if (*(int *)a == *(int *)b) {
 		return 0;
-	}else if (*(int*)a > *(int*)b){
+	} else if (*(int *)a > *(int *)b) {
 		return 1;
 	}
-    return -1;
+	return -1;
 }
 
-void prueba_lista_buscar() {
-    int a = 10, b = 20, c = 30;
-    lista_t *lista = lista_crear();
+void prueba_lista_buscar()
+{
+	int a = 10, b = 20, c = 30;
+	lista_t *lista = lista_crear();
 
-    lista_agregar(lista, &a);
-    lista_agregar(lista, &b);
-    lista_agregar(lista, &c);
+	lista_agregar(lista, &a);
+	lista_agregar(lista, &b);
+	lista_agregar(lista, &c);
 
-    pa2m_afirmar(*(int*)lista_buscar_elemento(lista, 0) == 10,
-        "Buscar elemento en la primera posicion devuelve el correcto");
-    pa2m_afirmar(*(int*)lista_buscar_elemento(lista, 1) == 20,
-        "Buscar elemento en la posicion del medio devuelve el correcto");
-    pa2m_afirmar(*(int*)lista_buscar_elemento(lista, 2) == 30,
-        "Buscar elemento en la ultima posicion devuelve el correcto");
-    pa2m_afirmar(lista_buscar_elemento(lista, 3) == NULL,
-        "Buscar elemento en posicion inexistente devuelve NULL");
+	pa2m_afirmar(
+		*(int *)lista_buscar_elemento(lista, 0) == 10,
+		"Buscar elemento en la primera posicion devuelve el correcto");
+	pa2m_afirmar(
+		*(int *)lista_buscar_elemento(lista, 1) == 20,
+		"Buscar elemento en la posicion del medio devuelve el correcto");
+	pa2m_afirmar(
+		*(int *)lista_buscar_elemento(lista, 2) == 30,
+		"Buscar elemento en la ultima posicion devuelve el correcto");
+	pa2m_afirmar(lista_buscar_elemento(lista, 3) == NULL,
+		     "Buscar elemento en posicion inexistente devuelve NULL");
 
-    pa2m_afirmar(lista_buscar_posicion(lista, &a, &comparador_int) == 0,
-        "Buscar posicion del primer elemento devuelve 0");
-    pa2m_afirmar(lista_buscar_posicion(lista, &b, comparador_int) == 1,
-        "Buscar posicion de un elemento intermedio devuelve correcta");
-    pa2m_afirmar(lista_buscar_posicion(lista, &c, comparador_int) == 2,
-        "Buscar posicion del ultimo elemento devuelve correcta");
+	pa2m_afirmar(lista_buscar_posicion(lista, &a, &comparador_int) == 0,
+		     "Buscar posicion del primer elemento devuelve 0");
+	pa2m_afirmar(
+		lista_buscar_posicion(lista, &b, comparador_int) == 1,
+		"Buscar posicion de un elemento intermedio devuelve correcta");
+	pa2m_afirmar(lista_buscar_posicion(lista, &c, comparador_int) == 2,
+		     "Buscar posicion del ultimo elemento devuelve correcta");
 
-    int x = 99;
-    pa2m_afirmar(lista_buscar_posicion(lista, &x, comparador_int) == -1,
-        "Buscar un elemento inexistente devuelve -1");
+	int x = 99;
+	pa2m_afirmar(lista_buscar_posicion(lista, &x, comparador_int) == -1,
+		     "Buscar un elemento inexistente devuelve -1");
 
-    lista_destruir(lista);
+	lista_destruir(lista);
 }
 
 bool sumar_elementos(void *dato, void *extra)
@@ -127,20 +165,25 @@ void prueba_lista_con_cada_elemento()
 
 	// Recorrer toda la lista sumando
 	int suma = 0;
-	size_t aplicados = lista_con_cada_elemento(lista, sumar_elementos, &suma);
-	pa2m_afirmar(aplicados == 4, "Se aplico la funcion a todos los elementos");
-	pa2m_afirmar(suma == 10, "La suma acumulada de los elementos es correcta (10)");
+	size_t aplicados =
+		lista_con_cada_elemento(lista, sumar_elementos, &suma);
+	pa2m_afirmar(aplicados == 4,
+		     "Se aplico la funcion a todos los elementos");
+	pa2m_afirmar(suma == 10,
+		     "La suma acumulada de los elementos es correcta (10)");
 
 	// Recorrer cortando en el valor 3
 	int buscado = 3;
 	aplicados = lista_con_cada_elemento(lista, cortar_en_valor, &buscado);
-	pa2m_afirmar(aplicados == 3,
+	pa2m_afirmar(
+		aplicados == 3,
 		"El recorrido corta al encontrar el valor buscado (3), aplicando la funcion 3 veces");
 
 	// Caso lista vacia
 	lista_t *vacia = lista_crear();
 	aplicados = lista_con_cada_elemento(vacia, sumar_elementos, &suma);
-	pa2m_afirmar(aplicados == 0, "En una lista vacia no se aplica la funcion");
+	pa2m_afirmar(aplicados == 0,
+		     "En una lista vacia no se aplica la funcion");
 
 	lista_destruir(lista);
 	lista_destruir(vacia);
@@ -154,8 +197,9 @@ void prueba_lista_iterador()
 	lista_t *vacia = lista_crear();
 	lista_iterador_t *it_vacio = lista_iterador_crear(vacia);
 	pa2m_afirmar(!lista_iterador_hay_mas_elementos(it_vacio),
-		"Un iterador creado sobre lista vacia no tiene elementos");
-	pa2m_afirmar(lista_iterador_obtener_actual(it_vacio) == NULL,
+		     "Un iterador creado sobre lista vacia no tiene elementos");
+	pa2m_afirmar(
+		lista_iterador_obtener_actual(it_vacio) == NULL,
 		"Un iterador creado sobre lista vacia devuelve NULL al obtener actual");
 	lista_iterador_destruir(it_vacio);
 	lista_destruir(vacia);
@@ -165,11 +209,12 @@ void prueba_lista_iterador()
 	lista_agregar(una, &a);
 	lista_iterador_t *it_una = lista_iterador_crear(una);
 	pa2m_afirmar(lista_iterador_hay_mas_elementos(it_una),
-		"Iterador detecta un unico elemento presente");
-	pa2m_afirmar(*(int*)lista_iterador_obtener_actual(it_una) == 1,
-		"Iterador devuelve correctamente el unico elemento");
+		     "Iterador detecta un unico elemento presente");
+	pa2m_afirmar(*(int *)lista_iterador_obtener_actual(it_una) == 1,
+		     "Iterador devuelve correctamente el unico elemento");
 	lista_iterador_siguiente(it_una);
-	pa2m_afirmar(!lista_iterador_hay_mas_elementos(it_una),
+	pa2m_afirmar(
+		!lista_iterador_hay_mas_elementos(it_una),
 		"Iterador no tiene mas elementos luego de avanzar al final");
 	lista_iterador_destruir(it_una);
 	lista_destruir(una);
@@ -181,11 +226,12 @@ void prueba_lista_iterador()
 	lista_agregar(lista, &c);
 
 	lista_iterador_t *it = lista_iterador_crear(lista);
-	int esperados[] = {1, 2, 3};
+	int esperados[] = { 1, 2, 3 };
 	int i = 0;
 	while (lista_iterador_hay_mas_elementos(it)) {
-		pa2m_afirmar(*(int*)lista_iterador_obtener_actual(it) == esperados[i],
-			"Iterador recorre en orden el elemento esperado");
+		pa2m_afirmar(*(int *)lista_iterador_obtener_actual(it) ==
+				     esperados[i],
+			     "Iterador recorre en orden el elemento esperado");
 		lista_iterador_siguiente(it);
 		i++;
 	}
@@ -195,62 +241,96 @@ void prueba_lista_iterador()
 	lista_destruir(lista);
 }
 // ==================================PRUEBAS PILA========================================
-void prueba_pila_alternado() {
-    pila_t *p = pila_crear();
-    int a = 1, b = 2, c = 3, d = 4;
+void prueba_pila_alternado()
+{
+	pila_t *p = pila_crear();
+	int a = 1, b = 2, c = 3, d = 4;
 
-    pa2m_afirmar(pila_apilar(p, &a), "Apilar funciona en lista vacia");
-    pa2m_afirmar(pila_apilar(p, &b), "Apilar en lista con UN elemento funciona");
-    pa2m_afirmar(pila_desapilar(p) == &b, "Desapilar devuelve el valor correcto");
-    pa2m_afirmar(pila_apilar(p, &c), "Apilar nuevamente luego de desapilar funciona");
-    pa2m_afirmar(pila_ver_primero(p) == &c, "El tope devuelto por pila_ver_primero es el correspondiente"); // <-- corregido
-    pa2m_afirmar(pila_desapilar(p) == &c, "Desapilar devuelve el valor correcto");
-    pa2m_afirmar(pila_desapilar(p) == &a, "Desapilar devuelve el valor correcto");
-    pa2m_afirmar(pila_desapilar(p) == NULL, "Desapilar en vacia devuelve NULL");
-    pa2m_afirmar(pila_apilar(p, &d), "Apilar luego de dejar la pila vacia funcioan correctamente");
-    pa2m_afirmar(pila_ver_primero(p) == &d, "Su tope tambien es detectado correctamente"); // <-- corregido
-    pa2m_afirmar(pila_cantidad(p) == 1, "La cantidad final de elementos en la pila es correcta"); // <-- corregido
-	
-    pila_destruir(p);
+	pa2m_afirmar(pila_apilar(p, &a), "Apilar funciona en lista vacia");
+	pa2m_afirmar(pila_apilar(p, &b),
+		     "Apilar en lista con UN elemento funciona");
+	pa2m_afirmar(pila_desapilar(p) == &b,
+		     "Desapilar devuelve el valor correcto");
+	pa2m_afirmar(pila_apilar(p, &c),
+		     "Apilar nuevamente luego de desapilar funciona");
+	pa2m_afirmar(
+		pila_ver_primero(p) == &c,
+		"El tope devuelto por pila_ver_primero es el correspondiente"); // <-- corregido
+	pa2m_afirmar(pila_desapilar(p) == &c,
+		     "Desapilar devuelve el valor correcto");
+	pa2m_afirmar(pila_desapilar(p) == &a,
+		     "Desapilar devuelve el valor correcto");
+	pa2m_afirmar(pila_desapilar(p) == NULL,
+		     "Desapilar en vacia devuelve NULL");
+	pa2m_afirmar(
+		pila_apilar(p, &d),
+		"Apilar luego de dejar la pila vacia funcioan correctamente");
+	pa2m_afirmar(
+		pila_ver_primero(p) == &d,
+		"Su tope tambien es detectado correctamente"); // <-- corregido
+	pa2m_afirmar(
+		pila_cantidad(p) == 1,
+		"La cantidad final de elementos en la pila es correcta"); // <-- corregido
+
+	pila_destruir(p);
 }
-void prueba_cola_alternado() {
-    cola_t *q = cola_crear();
-    int a = 1, b = 2, c = 3, d = 4;
+void prueba_cola_alternado()
+{
+	cola_t *q = cola_crear();
+	int a = 1, b = 2, c = 3, d = 4;
 
-    pa2m_afirmar(cola_encolar(q, &a), "Encolar funciona en cola vacia");
-    pa2m_afirmar(cola_encolar(q, &b), "Encolar en cola con UN elemento funciona");
-    pa2m_afirmar(cola_desencolar(q) == &a, "Desencolar devuelve el valor correcto (FIFO)");
-    pa2m_afirmar(cola_encolar(q, &c), "Encolar nuevamente luego de desencolar funciona");
-    pa2m_afirmar(cola_ver_primero(q) == &b, "El primero devuelto por cola_ver_primero es el correspondiente");
-    pa2m_afirmar(cola_desencolar(q) == &b, "Desencolar devuelve el valor correcto");
-    pa2m_afirmar(cola_desencolar(q) == &c, "Desencolar devuelve el valor correcto");
-    pa2m_afirmar(cola_desencolar(q) == NULL, "Desencolar en vacia devuelve NULL");
-    pa2m_afirmar(cola_encolar(q, &d), "Encolar luego de dejar la cola vacia funciona correctamente");
-    pa2m_afirmar(cola_ver_primero(q) == &d, "Su primero tambien es detectado correctamente");
-    pa2m_afirmar(cola_cantidad(q) == 1, "La cantidad final de elementos en la cola es correcta");
+	pa2m_afirmar(cola_encolar(q, &a), "Encolar funciona en cola vacia");
+	pa2m_afirmar(cola_encolar(q, &b),
+		     "Encolar en cola con UN elemento funciona");
+	pa2m_afirmar(cola_desencolar(q) == &a,
+		     "Desencolar devuelve el valor correcto (FIFO)");
+	pa2m_afirmar(cola_encolar(q, &c),
+		     "Encolar nuevamente luego de desencolar funciona");
+	pa2m_afirmar(
+		cola_ver_primero(q) == &b,
+		"El primero devuelto por cola_ver_primero es el correspondiente");
+	pa2m_afirmar(cola_desencolar(q) == &b,
+		     "Desencolar devuelve el valor correcto");
+	pa2m_afirmar(cola_desencolar(q) == &c,
+		     "Desencolar devuelve el valor correcto");
+	pa2m_afirmar(cola_desencolar(q) == NULL,
+		     "Desencolar en vacia devuelve NULL");
+	pa2m_afirmar(
+		cola_encolar(q, &d),
+		"Encolar luego de dejar la cola vacia funciona correctamente");
+	pa2m_afirmar(cola_ver_primero(q) == &d,
+		     "Su primero tambien es detectado correctamente");
+	pa2m_afirmar(cola_cantidad(q) == 1,
+		     "La cantidad final de elementos en la cola es correcta");
 
-    cola_destruir(q);
+	cola_destruir(q);
 }
 
 int main()
 {
-	
-	pa2m_nuevo_grupo("|===================================== PRUEBAS DE LISTA =====================================|");
+	pa2m_nuevo_grupo(
+		"|===================================== PRUEBAS DE LISTA =====================================|");
 	pa2m_nuevo_grupo("============== LISTA RECIEN CREADA ===============");
 	prueba_lista_vacia();
 	pa2m_nuevo_grupo("============== LISTA ELIMINAR ===============");
 	prueba_lista_borrar();
-	pa2m_nuevo_grupo("============== LISTA AGREGAR-INSERTAR ===============");
+	pa2m_nuevo_grupo(
+		"============== LISTA AGREGAR-INSERTAR ===============");
 	prueba_lista_agregar_insertar();
-	pa2m_nuevo_grupo("============== LISTA BUSCAR ELEMENTO-POSICION ===============");
+	pa2m_nuevo_grupo(
+		"============== LISTA BUSCAR ELEMENTO-POSICION ===============");
 	prueba_lista_buscar();
-	pa2m_nuevo_grupo("============== LISTA RECORRER CON CADA ELEMENTO ===============");
+	pa2m_nuevo_grupo(
+		"============== LISTA RECORRER CON CADA ELEMENTO ===============");
 	prueba_lista_con_cada_elemento();
-	pa2m_nuevo_grupo("============== LISTA ITERADOR EXTERNO ===============");
+	pa2m_nuevo_grupo(
+		"============== LISTA ITERADOR EXTERNO ===============");
 	prueba_lista_iterador();
-	pa2m_nuevo_grupo("|===================================== PRUEBAS DE PILA =====================================|");
+	pa2m_nuevo_grupo(
+		"|===================================== PRUEBAS DE PILA =====================================|");
 	prueba_pila_alternado();
-	pa2m_nuevo_grupo("|===================================== PRUEBAS DE COLA =====================================|");
+	pa2m_nuevo_grupo(
+		"|===================================== PRUEBAS DE COLA =====================================|");
 	prueba_cola_alternado();
 	return pa2m_mostrar_reporte();
 }
