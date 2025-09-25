@@ -1,0 +1,9 @@
+PRIMITIVAS:
+X lista_con_cada_elemento
+    -Iterador
+    -lista_destruir
+    -lista_destruir_todo
+PRUEBAS:
+    -lista_cantidad
+X lista_con_cada_elemento
+    -Iterador

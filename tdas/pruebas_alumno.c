@@ -61,6 +61,91 @@ void prueba_lista_agregar_insertar() {
     pa2m_afirmar(lista_buscar_elemento(lista, 2) == &c, "Elemento en posicion 2 es correcto");
     pa2m_afirmar(lista_buscar_elemento(lista, 3) == &b, "Ultimo elemento es correcto");
 }
+
+int comparador_int(const void *a, const void *b) {
+    if (*(int*)a == *(int*)b){
+		return 0;
+	}else if (*(int*)a > *(int*)b){
+		return 1;
+	}
+    return -1;
+}
+
+void prueba_lista_buscar() {
+    int a = 10, b = 20, c = 30;
+    lista_t *lista = lista_crear();
+
+    lista_agregar(lista, &a);
+    lista_agregar(lista, &b);
+    lista_agregar(lista, &c);
+
+    pa2m_afirmar(*(int*)lista_buscar_elemento(lista, 0) == 10,
+        "Buscar elemento en la primera posicion devuelve el correcto");
+    pa2m_afirmar(*(int*)lista_buscar_elemento(lista, 1) == 20,
+        "Buscar elemento en la posicion del medio devuelve el correcto");
+    pa2m_afirmar(*(int*)lista_buscar_elemento(lista, 2) == 30,
+        "Buscar elemento en la ultima posicion devuelve el correcto");
+    pa2m_afirmar(lista_buscar_elemento(lista, 3) == NULL,
+        "Buscar elemento en posicion inexistente devuelve NULL");
+
+    pa2m_afirmar(lista_buscar_posicion(lista, &a, &comparador_int) == 0,
+        "Buscar posicion del primer elemento devuelve 0");
+    pa2m_afirmar(lista_buscar_posicion(lista, &b, comparador_int) == 1,
+        "Buscar posicion de un elemento intermedio devuelve correcta");
+    pa2m_afirmar(lista_buscar_posicion(lista, &c, comparador_int) == 2,
+        "Buscar posicion del ultimo elemento devuelve correcta");
+
+    int x = 99;
+    pa2m_afirmar(lista_buscar_posicion(lista, &x, comparador_int) == -1,
+        "Buscar un elemento inexistente devuelve -1");
+
+    // lista_destruir(lista);
+}
+
+
+bool sumar_elementos(void *dato, void *extra)
+{
+	int *suma = (int *)extra;
+	*suma += *(int *)dato;
+	return true; // nunca corta
+}
+
+bool cortar_en_valor(void *dato, void *extra)
+{
+	int buscado = *(int *)extra;
+	return (*(int *)dato != buscado); // corta cuando encuentra el valor
+}
+
+void prueba_lista_con_cada_elemento()
+{
+	int a = 1, b = 2, c = 3, d = 4;
+	lista_t *lista = lista_crear();
+	lista_agregar(lista, &a);
+	lista_agregar(lista, &b);
+	lista_agregar(lista, &c);
+	lista_agregar(lista, &d);
+
+	// Recorrer toda la lista sumando
+	int suma = 0;
+	size_t aplicados = lista_con_cada_elemento(lista, sumar_elementos, &suma);
+	pa2m_afirmar(aplicados == 4, "Se aplico la funcion a todos los elementos");
+	pa2m_afirmar(suma == 10, "La suma acumulada de los elementos es correcta (10)");
+
+	// Recorrer cortando en el valor 3
+	int buscado = 3;
+	aplicados = lista_con_cada_elemento(lista, cortar_en_valor, &buscado);
+	pa2m_afirmar(aplicados == 3,
+		"El recorrido corta al encontrar el valor buscado (3), aplicando la funcion 3 veces");
+
+	// Caso lista vacia
+	lista_t *vacia = lista_crear();
+	aplicados = lista_con_cada_elemento(vacia, sumar_elementos, &suma);
+	pa2m_afirmar(aplicados == 0, "En una lista vacia no se aplica la funcion");
+
+	// lista_destruir(lista);
+	// lista_destruir(vacia);
+}
+
 int main()
 {
 	pa2m_nuevo_grupo("============== LISTA RECIEN CREADA ===============");
@@ -69,5 +154,10 @@ int main()
 	prueba_lista_borrar();
 	pa2m_nuevo_grupo("============== LISTA AGREGAR-INSERTAR ===============");
 	prueba_lista_agregar_insertar();
+	pa2m_nuevo_grupo("============== LISTA BUSCAR ELEMENTO-POSICION ===============");
+	prueba_lista_buscar();
+	pa2m_nuevo_grupo("============== LISTA RECORRER CON CADA ELEMENTO ===============");
+	prueba_lista_con_cada_elemento();
+
 	return pa2m_mostrar_reporte();
 }

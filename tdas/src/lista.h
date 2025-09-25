@@ -58,15 +58,15 @@ int lista_buscar_posicion(lista_t *lista, void *elemento,
  */
 void *lista_buscar_elemento(lista_t *lista, size_t posicion);
 
-/**
- * Recorre los elementos de la lista y aplica a cada uno la función f.
- *
- * Cuando la función f devuelve false se deja de recorrer la lista.
- *
- * La función retorna la cantidad de elementos a los cuales se le aplicó f
- */
-size_t lista_con_cada_elemento(lista_t *lista, bool (*f)(void *, void *),
-			       void *extra);
+	/**
+	 * Recorre los elementos de la lista y aplica a cada uno la función f.
+	 *
+	 * Cuando la función f devuelve false se deja de recorrer la lista.
+	 *
+	 * La función retorna la cantidad de elementos a los cuales se le aplicó f
+	 */
+	size_t lista_con_cada_elemento(lista_t *lista, bool (*f)(void *, void *),
+					void *extra);
 
 /**
  * Destruye la lista aplicando la función destructora a cada elemento.

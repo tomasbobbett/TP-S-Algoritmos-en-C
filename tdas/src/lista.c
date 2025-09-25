@@ -27,7 +27,8 @@ nodo_t *crear_nodo(void *dato, nodo_t *siguiente){
     return nodo_res;
 }   
 //-------------------------IMPLEMENTACION DE PRIMITIVAS----------------------------
-//crear lista
+
+//crear lista o(1)
 lista_t *lista_crear(){
     lista_t *res = malloc(sizeof(lista_t));
     if (!res){
@@ -41,17 +42,17 @@ lista_t *lista_crear(){
     return res;
 }
 
-// lista_vacia, lista_cantidad: O(1)
+// lista_vacia: O (1)
 bool lista_vacia(lista_t *lista){
     return (lista->cantidad == 0);
 }
 
+//lista_cantidad: O(1)
 size_t lista_cantidad(lista_t *lista){
     return lista->cantidad;
 }
 
-
-// lista_agregar (al final): O(1) (si guardamos cola)
+// lista_agregar (al final): O(1)
 bool lista_agregar(lista_t *lista, void *dato){
     nodo_t *nodo = crear_nodo(dato,NULL); 
     if (!nodo){
@@ -68,6 +69,7 @@ bool lista_agregar(lista_t *lista, void *dato){
     lista->cantidad++;
     return true;
 }
+
 // lista_insertar: O(n) (recorrer hasta la posición)
 bool lista_insertar(lista_t *lista, void *elemento, size_t posicion){
     if (posicion >= lista->cantidad) return false; // posición inválida
@@ -94,7 +96,8 @@ bool lista_insertar(lista_t *lista, void *elemento, size_t posicion){
     lista->cantidad++;
     return true;
 }
-// lista_eliminar_elemento: O(n)
+
+// lista_eliminar_elemento: O(n) - o(1) si es el primer elemento
 void *lista_eliminar_elemento(lista_t *lista, size_t posicion){
     if (lista->cantidad == 0 || posicion >= lista->cantidad ){
         return NULL;
@@ -130,9 +133,21 @@ void *lista_eliminar_elemento(lista_t *lista, size_t posicion){
 
 // lista_buscar_posicion: O(n)
 int lista_buscar_posicion(lista_t *lista, void *elemento,int (*comparador)(const void *, const void *)){
-        
-
+    if (lista->cantidad == 0){
+        return -1;
+    }
+    nodo_t *act = lista->cabeza;
+    int posicion = 0;
+    while(comparador(act->dato, elemento) != 0 && posicion != lista->cantidad-1){
+        act = act->siguiente;
+        posicion++;
+    }
+    if (posicion == lista->cantidad-1 && comparador(act->dato, elemento) != 0){
+        return -1;
+    }
+    return posicion;
 }
+
 // lista_buscar_elemento: O(n)
 void *lista_buscar_elemento(lista_t *lista, size_t posicion){
     if (lista->cantidad == 0 || posicion >= lista->cantidad ){
@@ -151,7 +166,27 @@ void *lista_buscar_elemento(lista_t *lista, size_t posicion){
     }
     return nodo_actual->dato;
 }
-
-// lista_con_cada_elemento: **O(n)hasta quefdevuelvafalse`
-
+/**
+ * Recorre los elementos de la lista y aplica a cada uno la función f.
+ *
+ * Cuando la función f devuelve false se deja de recorrer la lista.
+ *
+ * La función retorna la cantidad de elementos a los cuales se le aplicó f
+ */
+// lista_con_cada_elemento: **O(n)hasta que devuelva false`
+size_t lista_con_cada_elemento(lista_t *lista, bool (*f)(void *, void *), void *extra){
+    if (lista->cantidad == 0){
+        return 0;
+    }
+    size_t cantidad_modificados = 0;
+    nodo_t *nodo_actual = lista->cabeza;
+    while (nodo_actual != NULL ){
+        cantidad_modificados++;
+        if (!f(nodo_actual->dato,extra)){
+            break;
+        }
+        nodo_actual = nodo_actual->siguiente;
+    }
+    return cantidad_modificados;
+}
 // Iterador: avanzar y obtener actual son O(1)
