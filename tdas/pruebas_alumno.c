@@ -102,7 +102,6 @@ void prueba_lista_buscar() {
     lista_destruir(lista);
 }
 
-
 bool sumar_elementos(void *dato, void *extra)
 {
 	int *suma = (int *)extra;

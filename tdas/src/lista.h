@@ -65,7 +65,7 @@ void *lista_buscar_elemento(lista_t *lista, size_t posicion);
 	 *
 	 * La función retorna la cantidad de elementos a los cuales se le aplicó f
 	 */
-	size_t lista_con_cada_elemento(lista_t *lista, bool (*f)(void *, void *),
+size_t lista_con_cada_elemento(lista_t *lista, bool (*f)(void *, void *),
 					void *extra);
 
 /**
