@@ -70,24 +70,25 @@ bool lista_agregar(lista_t *lista, void *dato){
 }
 // lista_insertar: O(n) (recorrer hasta la posición)
 bool lista_insertar(lista_t *lista, void *elemento, size_t posicion){
-    if (posicion > lista->cantidad || lista->cantidad==0){
-        return false;
-    }
-    if (posicion == 0){
-        nodo_t *cabeza_vieja = lista->cabeza; 
-        nodo_t *nuevo_nodo = crear_nodo(elemento, cabeza_vieja);
+    if (posicion >= lista->cantidad) return false; // posición inválida
+
+    if (posicion == 0) { // insertar al principio
+        nodo_t *nuevo_nodo = crear_nodo(elemento, lista->cabeza);
         lista->cabeza = nuevo_nodo;
+        if (lista->cantidad == 0){
+            lista->cola = nuevo_nodo;//la lista esta vacia
+        } 
         lista->cantidad++;
         return true;
-    }else if (posicion == lista->cantidad - 1){
-        lista_agregar(lista, elemento);
     }
-    size_t posicion_actual = 0;
+
+    // insertar en el medio (posición entre 1 y cantidad-1)
+    size_t i = 0;
     nodo_t *act = lista->cabeza;
-    while (posicion_actual != posicion-1){
+    while (i < posicion - 1) {
         act = act->siguiente;
-        posicion_actual++;
-    }    // 4, 5, 6, 4, 5
+        i++;
+    }
     nodo_t *nuevo_nodo = crear_nodo(elemento, act->siguiente);
     act->siguiente = nuevo_nodo;
     lista->cantidad++;
@@ -95,27 +96,61 @@ bool lista_insertar(lista_t *lista, void *elemento, size_t posicion){
 }
 // lista_eliminar_elemento: O(n)
 void *lista_eliminar_elemento(lista_t *lista, size_t posicion){
-    if (lista->cantidad == 0 || posicion > lista->cantidad ){
-        return false;
+    if (lista->cantidad == 0 || posicion >= lista->cantidad ){
+        return NULL;
     }
     if (posicion == 0){
         nodo_t *borrado = lista->cabeza;
+        void *dato = borrado->dato;
         lista->cabeza = borrado->siguiente;
+        free(borrado);
         lista->cantidad--;
-        return borrado->dato;
-    }else if (posicion == lista->cantidad - 1){
-        nodo_t *borrado = lista->cola;
-
-        //IMPLEMETAR BORRAR ULTIMO NO SE COMO MIERDA HACER////////////////////////////////////////
-        
-        return borrado->dato;
+        if (lista->cantidad == 0) {
+            lista->cola = NULL;
+        }
+        return dato;
     }
-    return lista->cabeza;
+    size_t posicion_actual = 0;
+    nodo_t *act = lista->cabeza;
+    while (posicion_actual != posicion - 1)
+    {
+        act = act->siguiente;
+        posicion_actual++;
+    }
+    nodo_t *borrado = act->siguiente;
+    void *dato = borrado->dato;   // Guardamos el dato antes del free
+    act->siguiente = borrado->siguiente;
+    free(borrado);
+    if (posicion == lista->cantidad - 1){
+        lista->cola = act;
+    }
+    lista->cantidad--;
+    return dato;
 }
 
 // lista_buscar_posicion: O(n)
+int lista_buscar_posicion(lista_t *lista, void *elemento,int (*comparador)(const void *, const void *)){
+        
 
+}
 // lista_buscar_elemento: O(n)
+void *lista_buscar_elemento(lista_t *lista, size_t posicion){
+    if (lista->cantidad == 0 || posicion >= lista->cantidad ){
+        return NULL;
+    }
+    if (posicion == 0){
+        return lista->cabeza->dato;
+    }else if (posicion == lista->cantidad-1){
+        return lista->cola->dato;
+    }
+    size_t posicion_actual = 0;
+    nodo_t *nodo_actual = lista->cabeza;
+    while (posicion_actual != posicion){
+        nodo_actual = nodo_actual->siguiente;
+        posicion_actual++;
+    }
+    return nodo_actual->dato;
+}
 
 // lista_con_cada_elemento: **O(n)hasta quefdevuelvafalse`
 
