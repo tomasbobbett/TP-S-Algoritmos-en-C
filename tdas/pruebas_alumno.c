@@ -99,7 +99,7 @@ void prueba_lista_buscar() {
     pa2m_afirmar(lista_buscar_posicion(lista, &x, comparador_int) == -1,
         "Buscar un elemento inexistente devuelve -1");
 
-    // lista_destruir(lista);
+    // //lista_destruir(lista);
 }
 
 
@@ -142,9 +142,59 @@ void prueba_lista_con_cada_elemento()
 	aplicados = lista_con_cada_elemento(vacia, sumar_elementos, &suma);
 	pa2m_afirmar(aplicados == 0, "En una lista vacia no se aplica la funcion");
 
-	// lista_destruir(lista);
-	// lista_destruir(vacia);
+	// //lista_destruir(lista);
+	// //lista_destruir(vacia);
 }
+
+void prueba_lista_iterador()
+{
+	int a = 1, b = 2, c = 3;
+
+	// Caso lista vacia
+	lista_t *vacia = lista_crear();
+	lista_iterador_t *it_vacio = lista_iterador_crear(vacia);
+	pa2m_afirmar(!lista_iterador_hay_mas_elementos(it_vacio),
+		"Un iterador creado sobre lista vacia no tiene elementos");
+	pa2m_afirmar(lista_iterador_obtener_actual(it_vacio) == NULL,
+		"Un iterador creado sobre lista vacia devuelve NULL al obtener actual");
+	lista_iterador_destruir(it_vacio);
+	//lista_destruir(vacia, NULL);
+
+	// Caso lista con un solo elemento
+	lista_t *una = lista_crear();
+	lista_agregar(una, &a);
+	lista_iterador_t *it_una = lista_iterador_crear(una);
+	pa2m_afirmar(lista_iterador_hay_mas_elementos(it_una),
+		"Iterador detecta un unico elemento presente");
+	pa2m_afirmar(*(int*)lista_iterador_obtener_actual(it_una) == 1,
+		"Iterador devuelve correctamente el unico elemento");
+	lista_iterador_siguiente(it_una);
+	pa2m_afirmar(!lista_iterador_hay_mas_elementos(it_una),
+		"Iterador no tiene mas elementos luego de avanzar al final");
+	lista_iterador_destruir(it_una);
+	//lista_destruir(una, NULL);
+
+	// Caso lista con varios elementos
+	lista_t *lista = lista_crear();
+	lista_agregar(lista, &a);
+	lista_agregar(lista, &b);
+	lista_agregar(lista, &c);
+
+	lista_iterador_t *it = lista_iterador_crear(lista);
+	int esperados[] = {1, 2, 3};
+	int i = 0;
+	while (lista_iterador_hay_mas_elementos(it)) {
+		pa2m_afirmar(*(int*)lista_iterador_obtener_actual(it) == esperados[i],
+			"Iterador recorre en orden el elemento esperado");
+		lista_iterador_siguiente(it);
+		i++;
+	}
+	pa2m_afirmar(i == 3, "Iterador recorrio todos los elementos");
+
+	lista_iterador_destruir(it);
+	//lista_destruir(lista, NULL);
+}
+
 
 int main()
 {
@@ -158,6 +208,8 @@ int main()
 	prueba_lista_buscar();
 	pa2m_nuevo_grupo("============== LISTA RECORRER CON CADA ELEMENTO ===============");
 	prueba_lista_con_cada_elemento();
+	pa2m_nuevo_grupo("============== LISTA ITERADOR EXTERNO ===============");
+	prueba_lista_iterador();
 
 	return pa2m_mostrar_reporte();
 }

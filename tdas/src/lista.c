@@ -16,6 +16,7 @@ struct lista_iterador {
     nodo_t *actual;
 };
 
+
 nodo_t *crear_nodo(void *dato, nodo_t *siguiente){
     nodo_t *nodo_res = malloc(sizeof(nodo_t));
     if (!nodo_res){
@@ -166,13 +167,7 @@ void *lista_buscar_elemento(lista_t *lista, size_t posicion){
     }
     return nodo_actual->dato;
 }
-/**
- * Recorre los elementos de la lista y aplica a cada uno la función f.
- *
- * Cuando la función f devuelve false se deja de recorrer la lista.
- *
- * La función retorna la cantidad de elementos a los cuales se le aplicó f
- */
+
 // lista_con_cada_elemento: **O(n)hasta que devuelva false`
 size_t lista_con_cada_elemento(lista_t *lista, bool (*f)(void *, void *), void *extra){
     if (lista->cantidad == 0){
@@ -189,4 +184,32 @@ size_t lista_con_cada_elemento(lista_t *lista, bool (*f)(void *, void *), void *
     }
     return cantidad_modificados;
 }
+//-------------------------------------------------ITERADOR---------------------------------------------------
 // Iterador: avanzar y obtener actual son O(1)
+
+lista_iterador_t *lista_iterador_crear(lista_t *lista){
+    lista_iterador_t *iterador = malloc(sizeof(lista_iterador_t));
+    iterador->actual = lista->cabeza;
+    return iterador;
+}
+
+bool lista_iterador_hay_mas_elementos(lista_iterador_t *it){
+    return it->actual != NULL;
+}
+
+void lista_iterador_siguiente(lista_iterador_t *it){
+    if (it && it->actual){
+        it->actual = it->actual->siguiente;
+    }
+}
+
+void *lista_iterador_obtener_actual(lista_iterador_t *it){
+    if (!it || !it->actual){
+        return NULL;
+    }
+    return it->actual->dato;
+}
+
+void lista_iterador_destruir(lista_iterador_t *it){
+    free(it);
+}
