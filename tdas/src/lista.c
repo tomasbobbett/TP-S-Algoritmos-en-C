@@ -73,7 +73,7 @@ bool lista_agregar(lista_t *lista, void *dato){
 
 // lista_insertar: O(n) (recorrer hasta la posición)
 bool lista_insertar(lista_t *lista, void *elemento, size_t posicion){
-    if (posicion >= lista->cantidad) return false; // posición inválida
+    if (posicion >= lista->cantidad || lista->cantidad == 0) return false; // posición inválida
 
     if (posicion == 0) { // insertar al principio
         nodo_t *nuevo_nodo = crear_nodo(elemento, lista->cabeza);
