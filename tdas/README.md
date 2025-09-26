@@ -27,17 +27,31 @@ a partir de las primitivas implementadas.
 La lista es una <b>lista enlazada dinámica</b>, donde cada nodo contiene un puntero genérico a un dato y un puntero al siguiente nodo. Permite insertar y eliminar en cualquier
 posición, buscar algun elemento en cualquier posicion, encontrar el numero de posicion de un elemento o recorrer la secuencia e iterar de manera interna y externa.
 
+
+
+<div align="center">
 <img src="img/lista_general.png">
+</div>
+
+
 
 La pila está implementada sobre la lista, utilizando la inserción y eliminación al principio para respetar la política LIFO (last in, first out) y la complejidad pedida O(1). Sus operaciones principales son apilar, desapilar, ver_tope y cantidad.
-<div align-items="center">
+
+
+
+<div align="center">
 <img src="img/pila_general.png">
-	
 </div>
+
+
 
 La cola también se apoya en la lista, pero opera con inserciones al final y eliminaciones al principio, cumpliendo la política FIFO (first in, first out) y la complejidad pedida O(1). Sus operaciones principales son encolar, desencolar, ver_primero y cantidad.
 
-------------------------IMAGEN COLA FUNCIONAMIENTO-------------------------------------------
+
+<div align="center">
+<img src="img/cola_general.png">
+</div>
+
 <h2>Reservas de memoria realizadas:</h2>
 <ul>
     <li>Al crear la lista, necesitamos reservar un bloque de memoria del tamaño del struct de la lista, que contiene punteros a cabeza, cola y la cantidad de elementos. Esto lo hacemos porque la lista debe persistir en memoria mientras se use, así que se reserva dinámicamente, para tener un objeto que represente la lista completa y sirva como "manejador" (puntero que se pasa a todas las funciones).</li>
