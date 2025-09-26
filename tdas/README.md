@@ -76,11 +76,18 @@ para no tener perdidas de memoria.
 <h2>En cuanto a decisiones de implementación:</h2>
 <ul>
     <li>Para el struct de la lista decidi incluir 3 elementos, puntero a la cabeza de la lista, puntero a la cola de la lista y por ultimo la cantidad de elementos en la lista.</li>
-    ----------------------------IMAGEN STRUCT LISTA-----------------
+
+<div align="center">
+<img src="img/struct_lista.png">
+</div>
     <li>Para el struct del nodo solo tenemos dos elementos, puntero al siguiente nodo y el dato que contiene el mismo.</li>
-    ----------------------------IMAGEN NODO SOLO-----------------------
+   <div align="center">
+<img src="img/nodo.png">
+</div>
     <li>Se eligio insertar al principio y agregar al principio en la pila porque si haciamos el orden correspondiente de la pila (poner al final y sacar al final) nos queda en O(n) ya que eliminar al final de una lista SIMPLEMENTE enlazada cuesta O(n).</li>
-    --------DIAGRAMA EXPLICANDO PROCESO DE ELIMINAR E INSERTAR EN PILA------------------
+   <div align="center">
+<img src="img/funcionamiento_pila.png">
+</div>
     <li>Para el caso del struct del iterador externo de la lista solo tenemos un elemento, un puntero el nodo actual que estamos iterando</li>
     --------------------IMAGEN STRUCT ITERADOR DE LISTA-----------------------------------
     <li>Para la liberación de memoria se creó una primitiva lista_destruir_todo que recibe un destructor de datos para evitar fugas de memoria cuando los elementos almacenados también fueron reservados dinámicamente.</li>
