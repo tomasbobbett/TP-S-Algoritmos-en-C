@@ -37,37 +37,18 @@ La cola también se apoya en la lista, pero opera con inserciones al final y eli
 
 ------------------------IMAGEN COLA FUNCIONAMIENTO-------------------------------------------
 
-En cuanto a decisiones de implementación:
-
-Se eligió una lista simplemente enlazada para simplificar la gestión de memoria.
-
-Se implementaron dos tipos de iteradores: interno (recorre toda la lista aplicando una función a cada elemento) y externo (permite avanzar nodo por nodo con control del usuario).
-
-Para la liberación de memoria se creó una primitiva lista_destruir_todo que recibe un destructor de datos para evitar fugas de memoria cuando los elementos almacenados también fueron reservados dinámicamente.
-### Por ejemplo:
-
-El programa funciona abriendo el archivo pasado como parámetro y leyendolo línea por línea. Por cada línea crea un registro e intenta agregarlo al vector. La función de lectura intenta leer todo el archivo o hasta encontrar el primer error. Devuelve un vector con todos los registros creados.
-
-<div align="center">
-<img width="70%" src="img/diagrama1.svg">
-</div>
-
-En el archivo `sarasa.c` la función `funcion1` utiliza `realloc` para agrandar la zona de memoria utilizada para conquistar el mundo. El resultado de `realloc` lo guardo en una variable auxiliar para no perder el puntero original en caso de error:
-
-```c
-int *vector = realloc(vector_original, (n+1)*sizeof(int));
-
-if(vector == NULL)
-    return -1;
-vector_original = vector;
-```
-
-
-<div align="center">
-<img width="70%" src="img/diagrama2.svg">
-</div>
-
----
+<h2>En cuanto a decisiones de implementación:</h2>
+<ul>
+    <li>Para el struct de la lista decidi incluir 3 elementos, puntero a la cabeza de la lista, puntero a la cola de la lista y por ultimo la cantidad de elementos en la lista.</li>
+    ----------------------------IMAGEN STRUCT LISTA-----------------
+    <li>Para el struct del nodo solo tenemos dos elementos, puntero al siguiente nodo y el dato que contiene el mismo.</li>
+    ----------------------------IMAGEN NODO SOLO-----------------------
+    <li>Se eligio insertar al principio y agregar al principio en la pila porque si haciamos el orden correspondiente de la pila (poner al final y sacar al final) nos queda en O(n) ya que eliminar al final de una lista SIMPLEMENTE enlazada cuesta O(n).</li>
+    --------DIAGRAMA EXPLICANDO PROCESO DE ELIMINAR E INSERTAR EN PILA------------------
+    <li>Para el caso del struct del iterador externo de la lista solo tenemos un elemento, un puntero el nodo actual que estamos iterando</li>
+    --------------------IMAGEN STRUCT ITERADOR DE LISTA-----------------------------------
+    <li>Para la liberación de memoria se creó una primitiva lista_destruir_todo que recibe un destructor de datos para evitar fugas de memoria cuando los elementos almacenados también fueron reservados dinámicamente.</li>
+</ul>
 
 ## Respuestas a las preguntas teóricas
 <h3>1. Explicar qué es una lista, lista enlazada y lista doblemente enlazada:</h3>
