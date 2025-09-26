@@ -41,13 +41,22 @@ La cola también se apoya en la lista, pero opera con inserciones al final y eli
     <li>Al crear la lista, necesitamos reservar un bloque de memoria del tamaño del struct de la lista, que contiene punteros a cabeza, cola y la cantidad de elementos. Esto lo hacemos porque la lista debe persistir en memoria mientras se use, así que se reserva dinámicamente, para tener un objeto que represente la lista completa y sirva como "manejador" (puntero que se pasa a todas las funciones).</li>
     
     lista_t *res = malloc(sizeof(lista_t));
-<li>Cuando el usuario quiere insertar algo en la lista, lo que ocurre internamente es que se crea un nuevo nodo y este se agrega donde deba ir, ya con su siguiente cargado y con su dato. Para eso debemos reservar memoria para el mismo(estructura con dato y siguiente). Ya que el tamaño de la lista no es fijo, por lo tanto la memoria se pide dinámicamente a medida que crece.</li>
+<li>Cuando el usuario quiere insertar algo en la lista, lo que ocurre internamente es que se crea un nuevo nodo y este se agrega donde deba ir, ya con su siguiente cargado y con su dato. Para eso debemos reservar memoria para el mismo(estructura con dato y siguiente).</li>
         
     nodo_t *nodo_res = malloc(sizeof(nodo_t));
 <li>Por ultimo cuando se crea el iterador tambien debemos reservar memoria para la estructura del iterador, que guarda el puntero al nodo actual. El iterador es un objeto independiente que puede coexistir con la lista y se crea dinámicamente para ser destruido luego de usarlo.</li>
 
-    lista_iterador_t *iterador = malloc(sizeof(lista_iterador_t));   
+    lista_iterador_t *iterador = malloc(sizeof(lista_iterador_t)); 
 </ul>
+<h2>Liberaciones de memoria:</h2>
+Cada vez que hacemos un "malloc" para reservar un bloque de memoria, chequeamos si la reserva de la misma ocurrio satisfactoriamente. Si esto no ocurre hacemos free("nombre de objeto")
+para no tener perdidas de memoria.
+
+    if (!res) {
+		free(res); <-------LIBERACION DE MEMORIA RESERVADA
+		return NULL;
+	}
+    
 <h2>En cuanto a decisiones de implementación:</h2>
 <ul>
     <li>Para el struct de la lista decidi incluir 3 elementos, puntero a la cabeza de la lista, puntero a la cola de la lista y por ultimo la cantidad de elementos en la lista.</li>
