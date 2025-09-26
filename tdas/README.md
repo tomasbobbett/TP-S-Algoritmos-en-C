@@ -1,10 +1,6 @@
-<div align="right">
-<img width="32px" src="img/algo2.svg">
-</div>
-
 # TDA LISTA/PILA/COLA
 
-## Repositorio de (Nombre Apellido) - (Padrón) - (Mail)
+## Repositorio de Tomás Bobbett - 110560 - Tomas_Bobbett@hotmail.com
 
 - Para compilar:
 
