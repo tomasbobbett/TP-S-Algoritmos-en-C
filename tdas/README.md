@@ -11,22 +11,39 @@ gcc -Wall -Werror -Wconversion -std=c99 src/..c sarasa.c -o sarasa
 - Para ejecutar:
 
 ```bash
-línea de ejecución
+./sarasa
 ```
 
 - Para ejecutar con valgrind:
 ```bash
-línea con valgrind
+valgrind --leak-check=full --track-origins=yes ./sarasa
 ```
 ---
-##  Funcionamiento
+<h2>Funcionamiento</h2>
 
-Explicación de cómo funcionan las estructuras desarrolladas en el TP y el funcionamiento general del mismo.
+El trabajo práctico implementa tres estructuras de datos clásicas: lista, pila y cola. Todas ellas se basan en el mismo TDA lista, y cada estructura define operaciones propias 
+a partir de las primitivas implementadas.
 
-Aclarar en esta parte todas las decisiones que se tomaron al realizar el TP, cosas que no se aclaren en el enunciado, fragmentos de código que necesiten explicación extra, etc.
+La lista es una <b>lista enlazada dinámica</b>, donde cada nodo contiene un puntero genérico a un dato y un puntero al siguiente nodo. Permite insertar y eliminar en cualquier
+posición, buscar algun elemento en cualquier posicion, encontrar el numero de posicion de un elemento o recorrer la secuencia e iterar de manera interna y externa.
 
-Incluir **EN TODOS LOS TPS** los diagramas relevantes al problema (mayormente diagramas de memoria para explicar las estructuras, pero se pueden utilizar otros diagramas si es necesario).
+------------------------IMAGEN LISTA SIMPLEMENTE ENLAZADA GENERAL-----------------------------
 
+La pila está implementada sobre la lista, utilizando la inserción y eliminación al principio para respetar la política LIFO (last in, first out) y la complejidad pedida O(1). Sus operaciones principales son apilar, desapilar, ver_tope y cantidad.
+
+------------------------IMAGEN PILA FUNCIONAMIENTO--------------------------------------------
+
+La cola también se apoya en la lista, pero opera con inserciones al final y eliminaciones al principio, cumpliendo la política FIFO (first in, first out) y la complejidad pedida O(1). Sus operaciones principales son encolar, desencolar, ver_primero y cantidad.
+
+------------------------IMAGEN COLA FUNCIONAMIENTO-------------------------------------------
+
+En cuanto a decisiones de implementación:
+
+Se eligió una lista simplemente enlazada para simplificar la gestión de memoria.
+
+Se implementaron dos tipos de iteradores: interno (recorre toda la lista aplicando una función a cada elemento) y externo (permite avanzar nodo por nodo con control del usuario).
+
+Para la liberación de memoria se creó una primitiva lista_destruir_todo que recibe un destructor de datos para evitar fugas de memoria cuando los elementos almacenados también fueron reservados dinámicamente.
 ### Por ejemplo:
 
 El programa funciona abriendo el archivo pasado como parámetro y leyendolo línea por línea. Por cada línea crea un registro e intenta agregarlo al vector. La función de lectura intenta leer todo el archivo o hasta encontrar el primer error. Devuelve un vector con todos los registros creados.
