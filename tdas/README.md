@@ -27,11 +27,13 @@ a partir de las primitivas implementadas.
 La lista es una <b>lista enlazada dinámica</b>, donde cada nodo contiene un puntero genérico a un dato y un puntero al siguiente nodo. Permite insertar y eliminar en cualquier
 posición, buscar algun elemento en cualquier posicion, encontrar el numero de posicion de un elemento o recorrer la secuencia e iterar de manera interna y externa.
 
-------------------------IMAGEN LISTA SIMPLEMENTE ENLAZADA GENERAL-----------------------------
+<img src="img/lista_general.png">
 
 La pila está implementada sobre la lista, utilizando la inserción y eliminación al principio para respetar la política LIFO (last in, first out) y la complejidad pedida O(1). Sus operaciones principales son apilar, desapilar, ver_tope y cantidad.
-
-------------------------IMAGEN PILA FUNCIONAMIENTO--------------------------------------------
+<div align-items="center">
+<img src="img/pila_general.png">
+	
+</div>
 
 La cola también se apoya en la lista, pero opera con inserciones al final y eliminaciones al principio, cumpliendo la política FIFO (first in, first out) y la complejidad pedida O(1). Sus operaciones principales son encolar, desencolar, ver_primero y cantidad.
 
