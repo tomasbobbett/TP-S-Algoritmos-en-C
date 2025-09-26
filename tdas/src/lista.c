@@ -47,18 +47,27 @@ lista_t *lista_crear()
 // lista_vacia: O (1)
 bool lista_vacia(lista_t *lista)
 {
+	if (!lista) {
+		return true;
+	}
 	return (lista->cantidad == 0);
 }
 
 //lista_cantidad: O(1)
 size_t lista_cantidad(lista_t *lista)
 {
+	if (!lista) {
+		return 0;
+	}
 	return lista->cantidad;
 }
 
 // lista_agregar (al final): O(1)
 bool lista_agregar(lista_t *lista, void *dato)
 {
+	if (lista == NULL) {
+		return false;
+	}
 	nodo_t *nodo = crear_nodo(dato, NULL);
 	if (!nodo) {
 		return false;
@@ -78,15 +87,15 @@ bool lista_agregar(lista_t *lista, void *dato)
 // lista_insertar: O(n) (recorrer hasta la posición)
 bool lista_insertar(lista_t *lista, void *elemento, size_t posicion)
 {
+	if (!lista) {
+		return NULL;
+	}
 	if (posicion >= lista->cantidad || lista->cantidad == 0)
 		return false; // posición inválida
 
 	if (posicion == 0) { // insertar al principio
 		nodo_t *nuevo_nodo = crear_nodo(elemento, lista->cabeza);
 		lista->cabeza = nuevo_nodo;
-		if (lista->cantidad == 0) {
-			lista->cola = nuevo_nodo; //la lista esta vacia
-		}
 		lista->cantidad++;
 		return true;
 	}
@@ -107,6 +116,9 @@ bool lista_insertar(lista_t *lista, void *elemento, size_t posicion)
 // lista_eliminar_elemento: O(n) - o(1) si es el primer elemento
 void *lista_eliminar_elemento(lista_t *lista, size_t posicion)
 {
+	if (!lista) {
+		return NULL;
+	}
 	if (lista->cantidad == 0 || posicion >= lista->cantidad) {
 		return NULL;
 	}
@@ -142,26 +154,33 @@ void *lista_eliminar_elemento(lista_t *lista, size_t posicion)
 int lista_buscar_posicion(lista_t *lista, void *elemento,
 			  int (*comparador)(const void *, const void *))
 {
+	if (!lista || comparador == NULL) {
+		return -1;
+	}
 	if (lista->cantidad == 0) {
 		return -1;
 	}
+
 	nodo_t *act = lista->cabeza;
 	int posicion = 0;
-	while (comparador(act->dato, elemento) != 0 &&
-	       posicion != lista->cantidad - 1) {
+
+	while (act != NULL) {
+		if (comparador(act->dato, elemento) == 0) {
+			return posicion;
+		}
 		act = act->siguiente;
 		posicion++;
 	}
-	if (posicion == lista->cantidad - 1 &&
-	    comparador(act->dato, elemento) != 0) {
-		return -1;
-	}
-	return posicion;
+
+	return -1;
 }
 
 // lista_buscar_elemento: O(n)
 void *lista_buscar_elemento(lista_t *lista, size_t posicion)
 {
+	if (!lista) {
+		return NULL;
+	}
 	if (lista->cantidad == 0 || posicion >= lista->cantidad) {
 		return NULL;
 	}
@@ -183,6 +202,9 @@ void *lista_buscar_elemento(lista_t *lista, size_t posicion)
 size_t lista_con_cada_elemento(lista_t *lista, bool (*f)(void *, void *),
 			       void *extra)
 {
+	if (!lista || !f || !extra) {
+		return 0;
+	}
 	if (lista->cantidad == 0) {
 		return 0;
 	}
@@ -214,7 +236,7 @@ void lista_destruir(lista_t *lista)
 
 void lista_destruir_todo(lista_t *lista, void (*destructor)(void *))
 {
-	if (!lista) {
+	if (!lista || !destructor) {
 		return;
 	}
 	nodo_t *actual = lista->cabeza;
@@ -234,6 +256,9 @@ void lista_destruir_todo(lista_t *lista, void (*destructor)(void *))
 
 lista_iterador_t *lista_iterador_crear(lista_t *lista)
 {
+	if (!lista) {
+		return NULL;
+	}
 	lista_iterador_t *iterador = malloc(sizeof(lista_iterador_t));
 	iterador->actual = lista->cabeza;
 	return iterador;
@@ -241,19 +266,28 @@ lista_iterador_t *lista_iterador_crear(lista_t *lista)
 
 bool lista_iterador_hay_mas_elementos(lista_iterador_t *it)
 {
+	if (!it) {
+		return false;
+	}
 	return it->actual != NULL;
 }
 
 void lista_iterador_siguiente(lista_iterador_t *it)
 {
-	if (it && it->actual) {
+	if (!it) {
+		return;
+	}
+	if (it->actual) {
 		it->actual = it->actual->siguiente;
 	}
 }
 
 void *lista_iterador_obtener_actual(lista_iterador_t *it)
 {
-	if (!it || !it->actual) {
+	if (!it) {
+		return NULL;
+	}
+	if (!it->actual) {
 		return NULL;
 	}
 	return it->actual->dato;
@@ -261,5 +295,8 @@ void *lista_iterador_obtener_actual(lista_iterador_t *it)
 
 void lista_iterador_destruir(lista_iterador_t *it)
 {
+	if (!it) {
+		return;
+	}
 	free(it);
 }

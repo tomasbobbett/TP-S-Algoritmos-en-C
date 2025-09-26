@@ -22,7 +22,7 @@ void prueba_lista_vacia()
 		lista_cantidad(lista) == 1,
 		"Agregar un elemento a la lista vacia suma la cantidad correcta");
 
-	//tp1_destruir(lista);
+	lista_destruir(lista);
 }
 
 void prueba_lista_borrar()
@@ -65,6 +65,7 @@ void prueba_lista_borrar()
 	pa2m_afirmar(
 		lista_eliminar_elemento(lista, 0) == NULL,
 		"Intentar eliminar algun elemento luego de eliminar todos devuelve NULL");
+	lista_destruir(lista);
 }
 
 void prueba_lista_agregar_insertar()
@@ -93,6 +94,7 @@ void prueba_lista_agregar_insertar()
 		     "Elemento en posicion 2 es correcto");
 	pa2m_afirmar(lista_buscar_elemento(lista, 3) == &b,
 		     "Ultimo elemento es correcto");
+	lista_destruir(lista);
 }
 
 int comparador_int(const void *a, const void *b)
