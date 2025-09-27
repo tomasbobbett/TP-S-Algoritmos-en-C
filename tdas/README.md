@@ -89,7 +89,9 @@ para no tener perdidas de memoria.
 <img src="img/funcionamiento_pila.png">
 </div>
     <li>Para el caso del struct del iterador externo de la lista solo tenemos un elemento, un puntero el nodo actual que estamos iterando</li>
-    --------------------IMAGEN STRUCT ITERADOR DE LISTA-----------------------------------
+    <div align="center">
+<img src="img/struct_iterador.png">
+</div>
     <li>Para la liberación de memoria se creó una primitiva lista_destruir_todo que recibe un destructor de datos para evitar fugas de memoria cuando los elementos almacenados también fueron reservados dinámicamente.</li>
 </ul>
 
@@ -98,16 +100,23 @@ para no tener perdidas de memoria.
 Una lista a secas es un conjunto ordenado de objetos donde cada posición tiene un elemento, pero una lista enlazada 
 es un tipo de dato abstracto (TDA) que es representado por medio de nodos conectados en una sola direccion (simplemente enlazada). 
 
--------------------IMAGEN DE LISTA ENLAZADA GENERAL------------------------------
+<h4>Lista simplemente enlazada:</h4>
+
+<div align="center">
+<img src="img/lista_simple.png">
+</div>
 
 Cada uno de estos nodos tiene un puntero al siguiente nodo en la lista (si este es el ultimo su siguiente seria NULL)
 y tambien contiene el puntero al dato en si q almacen el nodo.
 
--------------------IMAGEN DE NODO SOLO----------------------------------
-
 La diferencia entre la lista SIMPLEMENTE enlazada y la DOBLEMENTE enlazada esta en, como indica el nombre, la cantidad de direcciones en que se puede mover de un nodo a otro. 
 
--------------------IMAGEN LISTA SIMPLE Y DOBLE-------------------------
+<h4>Lista doblemente enlazada:</h4>
+
+<div align="center">
+<img src="img/lista_doble.png">
+</div>
+
 
 Sus caracteristicas son que la lista simple tiene una sola direccion, por lo que solo se puede recorrer para un solo lado. En 
 cambio, en la doble se puede ir en dos direcciones (adelante y atras).
@@ -115,7 +124,16 @@ Esto es una ventaja hablando de complejidad, pero tambien es una desventaja al s
 el nodo de la doblemente enlazada tiene un puntero de mas para el nodo anterior, mientras que los nodos de la simplemente 
 enlazada solo tiene uno para su siguiente.
 
--------------------IMAGEN DIFERENCIA DE NODOS--------------------------
+<h4>Nodo de lista simplemente enlazada:</h4>
+<div align="center">
+<img src="img/nodo.png">
+</div>
+
+<h4>Nodo de lista doblemente enlazada:</h4>
+
+<div align="center">
+<img src="img/nodo_doble.png">
+</div>
 
 
 La ventaja en la complejidad esta en la primitiva de eliminar al final, siendo O(n) en la lista simplemente enlazada, pero O(1) en la
@@ -127,22 +145,35 @@ tener un puntero al nodo anterior, permite el acceso a este en O(1). Por lo que 
 <h3>2.Explicar qué es una lista circular y de qué maneras se puede implementar.</h3>
 Una lista circular es una lista en la que el último nodo apunta nuevamente al primero, formando un ciclo cerrado.
 
------------------IMAGEN DE LISTA CIRCULAR GENERAL----------------------
+<h4>Lista circular simplemente enlazada:</h4>
+<div align="center">
+<img src="img/lista_circ_simple.png">
+</div>
+
 
 Puede implementarse como lista simple (la cola apunta a la cabeza) o como lista doble (la cola apunta a la cabeza y la cabeza al final).
 
------------------IMAGEN DE LISTA CIRCULAR DOBLEMENTE ENLAZADA-----------
+<h4>Lista circular doblemente enlazada:</h4>
+<div align="center">
+<img src="img/lista_circ_doble.png">
+</div>
 
 Se usa cuando se necesita un recorrido infinito, como en sistemas de turnos o buffers circulares.
 
 <h3>3.Explicar la diferencia de funcionamiento entre cola y pila.</h3>
 Una cola es una estructura FIFO (first in, first out), donde el primer elemento en entrar es el primero en salir, como una fila de personas.
 
------------------IMAGEN DE DIAGRAMA DE FUNCIONAMIENTO DE LA COLA--------------------------------
+<h4>Diagrama del funcionamiento de la cola:</h4>
+<div align="center">
+<img src="img/funcionamiento_cola.png">
+</div>
 
 Una pila es una estructura LIFO (last in, first out), donde el último en entrar es el primero en salir, como una pila de platos.
 
------------------IMAGEN DE DIAGRAMA DE FUNCIONAMIENTO DE LA PILA--------------------------------
+<h4>Diagrama del funcionamiento de la pila:</h4>
+<div align="center">
+<img src="img/funcionamiento_pila.png">
+</div>
 
 La diferencia está en el orden de extracción y en las operaciones principales: en la cola se encola y desencola, en la pila se apila y desapila.
 
