@@ -23,31 +23,31 @@ valgrind --leak-check=full --track-origins=yes ./sarasa
 
 El trabajo práctico implementa tres estructuras de datos clásicas: lista, pila y cola. Todas ellas se basan en el mismo TDA lista, y cada estructura define operaciones propias 
 a partir de las primitivas implementadas.
-
+<h4>-TDA Lista:</h4>
 La lista es una <b>lista enlazada dinámica</b>, donde cada nodo contiene un puntero genérico a un dato y un puntero al siguiente nodo. Permite insertar y eliminar en cualquier
 posición, buscar algun elemento en cualquier posicion, encontrar el numero de posicion de un elemento o recorrer la secuencia e iterar de manera interna y externa.
 
 
-
+<h4>Diagrama del TDA lista:</h4>
 <div align="center">
 <img src="img/lista_general.png">
 </div>
 
 
-
+<h4>-TDA Pila:</h4>
 La pila está implementada sobre la lista, utilizando la inserción y eliminación al principio para respetar la política LIFO (last in, first out) y la complejidad pedida O(1). Sus operaciones principales son apilar, desapilar, ver_tope y cantidad.
 
 
-
+<h4>Diagrama de TDA pila:</h4>
 <div align="center">
 <img src="img/pila_general.png">
 </div>
 
 
-
+<h4>TDA Cola:</h4>
 La cola también se apoya en la lista, pero opera con inserciones al final y eliminaciones al principio, cumpliendo la política FIFO (first in, first out) y la complejidad pedida O(1). Sus operaciones principales son encolar, desencolar, ver_primero y cantidad.
 
-
+<h4>Diagrama de TDA cola:</h4>
 <div align="center">
 <img src="img/cola_general.png">
 </div>
@@ -77,22 +77,33 @@ para no tener perdidas de memoria.
 <ul>
     <li>Para el struct de la lista decidi incluir 3 elementos, puntero a la cabeza de la lista, puntero a la cola de la lista y por ultimo la cantidad de elementos en la lista.</li>
 
+<h4>Diagrama del struct de la lista:</h4>
 <div align="center">
 <img src="img/struct_lista.png">
 </div>
-    <li>Para el struct del nodo solo tenemos dos elementos, puntero al siguiente nodo y el dato que contiene el mismo.</li>
-   <div align="center">
+
+<li>Para el struct del nodo solo tenemos dos elementos, puntero al siguiente nodo y el dato que contiene el mismo.</li>
+	
+<h4>Diagrama del struct de los nodos de la lista:</h4>
+<div align="center">
 <img src="img/nodo.png">
 </div>
-    <li>Se eligio insertar al principio y agregar al principio en la pila porque si haciamos el orden correspondiente de la pila (poner al final y sacar al final) nos queda en O(n) ya que eliminar al final de una lista SIMPLEMENTE enlazada cuesta O(n).</li>
-   <div align="center">
+
+<li>Se eligio insertar al principio y agregar al principio en la pila porque si haciamos el orden correspondiente de la pila (poner al final y sacar al final) nos queda en O(n) ya que eliminar al final de una lista SIMPLEMENTE enlazada cuesta O(n).</li>
+
+<h4>Diagrama de implementacion de pila con la lista en O(1):</h4>
+<div align="center">
 <img src="img/funcionamiento_pila.png">
 </div>
-    <li>Para el caso del struct del iterador externo de la lista solo tenemos un elemento, un puntero el nodo actual que estamos iterando</li>
-    <div align="center">
+
+<li>Para el caso del struct del iterador externo de la lista solo tenemos un elemento, un puntero el nodo actual que estamos iterando</li>
+
+<h4>Diagrama del struct del iterador de la lista:</h4>
+<div align="center">
 <img src="img/struct_iterador.png">
 </div>
-    <li>Para la liberación de memoria se creó una primitiva lista_destruir_todo que recibe un destructor de datos para evitar fugas de memoria cuando los elementos almacenados también fueron reservados dinámicamente.</li>
+
+<li>Para la liberación de memoria se creó una primitiva lista_destruir_todo que recibe un destructor de datos para evitar fugas de memoria cuando los elementos almacenados también fueron reservados dinámicamente.</li>
 </ul>
 
 ## Respuestas a las preguntas teóricas
@@ -101,7 +112,6 @@ Una lista a secas es un conjunto ordenado de objetos donde cada posición tiene 
 es un tipo de dato abstracto (TDA) que es representado por medio de nodos conectados en una sola direccion (simplemente enlazada). 
 
 <h4>Lista simplemente enlazada:</h4>
-
 <div align="center">
 <img src="img/lista_simple.png">
 </div>
@@ -112,7 +122,6 @@ y tambien contiene el puntero al dato en si q almacen el nodo.
 La diferencia entre la lista SIMPLEMENTE enlazada y la DOBLEMENTE enlazada esta en, como indica el nombre, la cantidad de direcciones en que se puede mover de un nodo a otro. 
 
 <h4>Lista doblemente enlazada:</h4>
-
 <div align="center">
 <img src="img/lista_doble.png">
 </div>
@@ -130,7 +139,6 @@ enlazada solo tiene uno para su siguiente.
 </div>
 
 <h4>Nodo de lista doblemente enlazada:</h4>
-
 <div align="center">
 <img src="img/nodo_doble.png">
 </div>
