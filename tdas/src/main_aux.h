@@ -4,7 +4,6 @@
 #include "lista.h"
 #include <string.h>
 
-
 #define BUSCAR "buscar"
 #define ID "id"
 #define NOMBRE "nombre"

@@ -25,7 +25,6 @@ bool insertar_en_lista(struct pokemon *p, void *lista)
 	return lista_agregar((lista_t *)lista, p);
 }
 
-
 struct pokemon *buscar_por_nombre(lista_t *lista, const char *nombre)
 {
 	size_t cant = lista_cantidad(lista);
