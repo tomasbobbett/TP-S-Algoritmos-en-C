@@ -3,21 +3,21 @@ X lista_con_cada_elemento
 X Iterador
 X lista_destruir
 X lista_destruir_todo
-}   -Devolver NULL cuando se quiere hacer algo en una lista nula
+X Devolver NULL cuando se quiere hacer algo en una lista nula
 
 PRUEBAS:
 X lista_con_cada_elemento
 X Iterador
 
 INFORME:
-}   -Escribir readme
-}        -Explicar qué es una lista, lista enlazada y lista doblemente enlazada.
-}        -Explicar las características de cada una.
-}        -Explicar las diferencias internas de implementación.
-}        -Explicar ventajas y desventajas de cada una, si existen.
-}        -Explicar qué es una lista circular y de qué maneras se puede implementar.
-}        -Explicar la diferencia de funcionamiento entre cola y pila.
-}        -Explicar la diferencia entre un iterador interno y uno externo.
-}    -Hacer diagramas en excalidraw
+X Escribir readme
+X Explicar qué es una lista, lista enlazada y lista doblemente enlazada.
+X Explicar las características de cada una.
+X Explicar las diferencias internas de implementación.
+X Explicar ventajas y desventajas de cada una, si existen.
+X Explicar qué es una lista circular y de qué maneras se puede implementar.
+X Explicar la diferencia de funcionamiento entre cola y pila.
+X Explicar la diferencia entre un iterador interno y uno externo.
+X Hacer diagramas en excalidraw
 
 
