@@ -6,6 +6,7 @@
         "stdlib.h": "c",
         "typeinfo": "c",
         "main_aux.h": "c",
-        "lista.h": "c"
+        "lista.h": "c",
+        "abb_estructura_privada.h": "c"
     }
 }
